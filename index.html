@@ -1,1065 +1,1094 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Human Engine — Конструктор промптов</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<title>Конструктор DSLR-промптов</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #F0EDE8;
-  --bg2: #E8E4DE;
-  --bg3: #DEDAD3;
-  --surface: #FAFAF8;
-  --taupe: #4A4540;
-  --taupe-light: #7A7268;
-  --taupe-dark: #2A2420;
-  --border: #D4CFC8;
-  --border2: #C4BFB8;
-  --text: #1C1A18;
-  --text2: #5A5650;
-  --text3: #9A9590;
-  --accent: #4A4540;
-  --gold: #C5A96A;
-}
+:root{--bg:#F0EDE8;--bg2:#E8E4DE;--bg3:#DEDAD3;--surface:#FAFAF8;--taupe:#4A4540;--taupe-l:#7A7268;--taupe-d:#2A2420;--border:#D4CFC8;--border2:#C4BFB8;--text:#1C1A18;--text2:#5A5650;--text3:#9A9590;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);min-height:100vh;}
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;letter-spacing:.06em;color:var(--taupe-d);}
+.hbtns{display:flex;gap:8px;}
 
-body {
-  background: var(--bg);
-  font-family: 'DM Sans', sans-serif;
-  color: var(--text);
-  min-height: 100vh;
-}
+.btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 18px;border-radius:20px;cursor:pointer;transition:all .15s;border:none;}
+.btn-p{background:var(--taupe);color:#F5F2ED;}
+.btn-p:hover{background:var(--taupe-d);}
+.btn-g{background:transparent;border:1px solid var(--border2);color:var(--taupe);}
+.btn-g:hover{background:var(--bg3);}
 
-/* ── HEADER ── */
-header {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+.container{max-width:860px;margin:0 auto;padding:24px 20px 140px;}
 
-.logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: .04em;
-  color: var(--taupe-dark);
-}
-.logo span { color: var(--taupe-light); font-weight: 300; }
+.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--taupe-d);letter-spacing:.03em;margin-bottom:4px;padding:20px 0 16px;}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
 
-.header-btns { display: flex; gap: 10px; align-items: center; }
+.section{margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.sec-hdr{padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-radius:12px 12px 0 0;}
+.sec-hdr.closed{border-bottom:none;border-radius:12px;}
+.sec-hdr:hover{background:var(--bg3);}
+.sec-num{width:24px;height:24px;border-radius:50%;background:var(--taupe);color:#F5F2ED;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--taupe-d);flex:1;}
+.sec-arrow{font-size:12px;color:var(--text3);transition:transform .2s;}
+.sec-arrow.open{transform:rotate(180deg);}
+.sec-body{padding:18px 20px;display:none;}
+.sec-body.open{display:block;}
 
-.btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 20px;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: all .18s;
-  border: none;
-}
-.btn-primary { background: var(--taupe); color: #F5F2ED; }
-.btn-primary:hover { background: var(--taupe-dark); }
-.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--taupe); }
-.btn-ghost:hover { background: var(--bg3); }
-.btn-sm { padding: 6px 14px; font-size: 12px; }
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.fg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+.field{margin-bottom:14px;}
+.field:last-child{margin-bottom:0;}
+.fl{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
 
-/* ── LAYOUT ── */
-.container { max-width: 900px; margin: 0 auto; padding: 40px 24px 120px; }
+select,textarea,input[type=text]{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+select:focus,textarea:focus{border-color:var(--taupe);}
+textarea{resize:vertical;min-height:70px;line-height:1.6;}
 
-/* ── SECTION ── */
-.section {
-  margin-bottom: 32px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-}
+/* multiselect */
+.ms-wrap{border:1px solid var(--border2);border-radius:7px;background:var(--bg);min-height:38px;padding:5px 8px;cursor:pointer;transition:border-color .15s;position:relative;}
+.ms-wrap:focus-within,.ms-wrap.open{border-color:var(--taupe);}
+.ms-tags{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+.ms-ph{font-size:12px;color:var(--text3);padding:2px 3px;}
+.tag{background:var(--taupe);color:#F5F2ED;font-size:11px;font-weight:500;padding:3px 8px;border-radius:14px;display:inline-flex;align-items:center;gap:4px;}
+.tag-x{opacity:.6;cursor:pointer;font-size:12px;line-height:1;}
+.tag-x:hover{opacity:1;}
+.ms-dropdown{display:none;position:fixed;background:#fff;border:1px solid var(--border2);border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:9999;max-height:240px;overflow-y:auto;}
+.ms-wrap.open .ms-dropdown{display:block;}
+.ms-opt{padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.ms-opt:hover{background:var(--bg2);}
+.ms-opt.selected{color:var(--taupe);font-weight:500;}
+.ms-opt .check{width:14px;height:14px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ms-opt.selected .check{background:var(--taupe);border-color:var(--taupe);color:#fff;font-size:10px;}
+.ms-search{padding:8px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;}
+.ms-search input{border:1px solid var(--border2);border-radius:5px;padding:5px 9px;font-size:12px;width:100%;}
 
-.section-header {
-  padding: 16px 24px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-num {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: var(--taupe);
-  color: #F5F2ED;
-  font-size: 11px;
-  font-weight: 500;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--taupe-dark);
-  letter-spacing: .02em;
-}
+/* presets */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+.pc{position:relative;}
+.pc-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.pc-row{display:flex;gap:0;}
+.pc-sel{flex:1;border-radius:7px 0 0 7px;border-right:none;}
+.pc-q{width:32px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border2);border-left:none;border-radius:0 7px 7px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--taupe-l);transition:all .15s;}
+.pc-q:hover{background:var(--taupe);color:#fff;}
+.pc-tip{display:none;position:fixed;width:220px;background:var(--taupe-d);color:#F5F2ED;font-size:12px;line-height:1.6;padding:12px 14px;border-radius:9px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.25);}
+.pc-tip.show{display:block;}
+.pc-tip-name{font-size:11px;font-weight:500;color:#C5A96A;margin-bottom:4px;}
 
-.section-body { padding: 20px 24px; }
+/* output */
+.output-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:90;}
+.out-tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--border);}
+.out-tab{font-size:12px;font-weight:500;color:var(--text3);padding:9px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px;}
+.out-tab.active{color:var(--taupe-d);border-bottom-color:var(--taupe);}
+.out-pane{display:none;padding:12px 20px 14px;}
+.out-pane.active{display:flex;gap:10px;align-items:flex-start;}
+.out-text{font-family:'DM Mono',monospace;font-size:11px;line-height:1.7;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;white-space:pre-wrap;max-height:130px;overflow-y:auto;flex:1;}
+.out-mini-text{font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.9;color:var(--taupe-d);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;white-space:pre-wrap;flex:1;}
+.out-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
 
-/* ── FIELD ── */
-.field { margin-bottom: 16px; }
-.field:last-child { margin-bottom: 0; }
-.field-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  margin-bottom: 6px;
-}
+#scroll-top{position:fixed;bottom:170px;left:20px;width:40px;height:40px;border-radius:50%;background:var(--taupe);color:#F5F2ED;font-size:18px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(74,69,64,.3);z-index:200;transition:all .15s;}
+#scroll-top:hover{background:var(--taupe-d);transform:translateY(-2px);}
 
-.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-
-select, textarea {
-  width: 100%;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  padding: 9px 12px;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  transition: border-color .15s;
-  outline: none;
-}
-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-select:focus, textarea:focus { border-color: var(--taupe); }
-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
-
-/* ── TAGS (multiselect simulation) ── */
-.tags-wrap {
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  background: var(--bg);
-  padding: 8px 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  cursor: pointer;
-  min-height: 40px;
-  transition: border-color .15s;
-}
-.tags-wrap:focus-within { border-color: var(--taupe); }
-.tag {
-  background: var(--taupe);
-  color: #F5F2ED;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.tag-x { opacity: .6; cursor: pointer; font-size: 13px; }
-.tag-x:hover { opacity: 1; }
-.tags-placeholder { font-size: 12px; color: var(--text3); align-self: center; }
-
-/* ── PRESETS ── */
-.presets-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
-.preset-col-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  margin-bottom: 8px;
-}
-.preset-col { position: relative; }
-.preset-select-wrap { position: relative; }
-.preset-q {
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  font-size: 11px;
-  color: var(--taupe-light);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all .15s;
-}
-.preset-q:hover { background: var(--taupe); color: #fff; }
-.preset-tooltip {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0; right: 0;
-  background: var(--taupe-dark);
-  color: #F5F2ED;
-  font-size: 12px;
-  line-height: 1.6;
-  padding: 12px 14px;
-  border-radius: 10px;
-  z-index: 50;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
-}
-.preset-col:hover .preset-tooltip { display: block; }
-.preset-name { font-size: 11px; font-weight: 500; color: #C5A96A; margin-bottom: 4px; }
-
-/* ── OUTPUT ── */
-.output-section {
-  position: sticky;
-  bottom: 0;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  padding: 20px 0 0;
-  margin-top: 32px;
-}
-.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; }
-.tab {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text3);
-  padding: 10px 20px;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all .15s;
-  margin-bottom: -1px;
-}
-.tab.active { color: var(--taupe-dark); border-bottom-color: var(--taupe); }
-.tab-content { padding: 20px 24px; display: none; }
-.tab-content.active { display: block; }
-
-.prompt-out {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  line-height: 1.8;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px;
-  white-space: pre-wrap;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.mini-out {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px;
-  line-height: 1.9;
-  color: var(--taupe-dark);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px 24px;
-  white-space: pre-wrap;
-}
-
-.output-actions { display: flex; gap: 10px; margin-top: 12px; padding: 0 0 20px; }
-
-/* ── SCROLL TOP ── */
-#scroll-top {
-  position: fixed;
-  bottom: 28px;
-  left: 28px;
-  width: 46px; height: 46px;
-  border-radius: 50%;
-  background: var(--taupe);
-  color: #F5F2ED;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 12px rgba(74,69,64,.3);
-  transition: all .18s;
-  z-index: 200;
-}
-#scroll-top:hover { background: var(--taupe-dark); transform: translateY(-2px); }
-
-/* ── HERO ── */
-.hero {
-  text-align: center;
-  padding: 48px 0 40px;
-}
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 42px;
-  font-weight: 300;
-  color: var(--taupe-dark);
-  letter-spacing: .04em;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-.hero-title em { font-style: italic; color: var(--taupe-light); }
-.hero-sub {
-  font-size: 14px;
-  color: var(--text2);
-  max-width: 480px;
-  margin: 0 auto 28px;
-  line-height: 1.7;
-}
-.hero-btns { display: flex; gap: 12px; justify-content: center; }
-
-/* ── DIVIDER ── */
-hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.mt{margin-top:14px;}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Human <span>Engine</span></div>
-  <div class="header-btns">
-    <button class="btn btn-ghost btn-sm" onclick="resetAll()">🗑 Сбросить всё</button>
-    <button class="btn btn-primary btn-sm" onclick="scrollTo(0,0)">🎲 Случайный персонаж</button>
+  <div class="logo">Конструктор DSLR-промптов</div>
+  <div class="hbtns">
+    <button class="btn btn-g" onclick="resetAll()">🗑 Сбросить всё</button>
+    <button class="btn btn-p" onclick="generateRandom()">🎲 Случайный персонаж</button>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-title">Конструктор<br><em>DSLR-промптов</em></div>
-    <div class="hero-sub">Собирайте точные промпты для генерации реалистичных портретов. Midjourney, Leonardo AI, DALL·E.</div>
-    <div class="hero-btns">
-      <button class="btn btn-primary" onclick="generateRandom()">🎲 Случайный персонаж</button>
-      <button class="btn btn-ghost" onclick="copyPrompt()">Копировать промпт</button>
-    </div>
-  </div>
-
-  <!-- PRESETS -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">🎛 Пресеты</div>
-    </div>
-    <div class="section-body">
-      <div class="presets-grid">
-
-        <div class="preset-col">
-          <div class="preset-col-label">💡 Свет</div>
-          <div class="preset-select-wrap">
-            <select id="preset_light" onchange="updatePrompt()">
-              <option value="">— выберите —</option>
-              <option value="rembrandt">Рембрандт</option>
-              <option value="split">Раздельный свет</option>
-              <option value="butterfly">Бабочка / Paramount</option>
-              <option value="rim">Контровой / Rim</option>
-              <option value="chiaroscuro">Кьяроскуро</option>
-              <option value="golden">Золотой час / Окно</option>
-              <option value="neon">Неоновый дуэт</option>
-              <option value="candle">Только свечи</option>
-              <option value="overcast">Пасмурный плоский</option>
-            </select>
-            <div class="preset-tooltip">
-              <div class="preset-name" id="light-name">—</div>
-              <div id="light-desc">Выберите пресет чтобы увидеть описание</div>
-            </div>
-          </div>
+  <div class="sec-body">
+    <div class="preset-grid">
+      <div class="pc">
+        <div class="pc-label">💡 Свет</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_light" onchange="updateTip('light');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="rembrandt">Рембрандт</option>
+            <option value="split">Раздельный свет</option>
+            <option value="butterfly">Бабочка / Paramount</option>
+            <option value="rim">Контровой / Rim</option>
+            <option value="chiaroscuro">Кьяроскуро</option>
+            <option value="golden">Золотой час / Окно</option>
+            <option value="neon">Неоновый дуэт</option>
+            <option value="candle">Только свечи</option>
+            <option value="overcast">Пасмурный плоский</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip(\'light_tip\', this)">?</div>
         </div>
-
-        <div class="preset-col">
-          <div class="preset-col-label">📷 Камера</div>
-          <div class="preset-select-wrap">
-            <select id="preset_camera" onchange="updatePrompt()">
-              <option value="">— выберите —</option>
-              <option value="ricoh">Ricoh GR (стрит)</option>
-              <option value="portra">Kodak Portra 400</option>
-              <option value="ektar">Kodak Ektar 100</option>
-              <option value="fuji">Fujifilm Superia 400</option>
-              <option value="contax">Contax T2 (Zeiss)</option>
-              <option value="leica">Leica M (Summilux)</option>
-              <option value="polaroid">Polaroid 600</option>
-              <option value="disposable">Одноразовая камера</option>
-              <option value="canon">Canon AE-1 (50mm)</option>
-            </select>
-            <div class="preset-tooltip">
-              <div class="preset-name" id="camera-name">—</div>
-              <div id="camera-desc">Выберите пресет чтобы увидеть описание</div>
-            </div>
-          </div>
+        <div class="pc-tip" id="light_tip"><div class="pc-tip-name" id="light_tip_name"></div><div id="light_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">📷 Камера</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_camera" onchange="updateTip('camera');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="ricoh">Ricoh GR (стрит)</option>
+            <option value="portra">Kodak Portra 400</option>
+            <option value="ektar">Kodak Ektar 100</option>
+            <option value="fuji">Fujifilm Superia 400</option>
+            <option value="contax">Contax T2 (Zeiss)</option>
+            <option value="leica">Leica M (Summilux)</option>
+            <option value="polaroid">Polaroid 600</option>
+            <option value="disposable">Одноразовая камера</option>
+            <option value="canon">Canon AE-1 (50mm)</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip(\'camera_tip\', this)">?</div>
         </div>
-
-        <div class="preset-col">
-          <div class="preset-col-label">🎨 Цвет / Грейдинг</div>
-          <div class="preset-select-wrap">
-            <select id="preset_color" onchange="updatePrompt()">
-              <option value="">— выберите —</option>
-              <option value="teal">Teal & Orange</option>
-              <option value="bleach">Отбеливающий обход</option>
-              <option value="warm">Тёплый аналог</option>
-              <option value="cold">Холодный скандинав</option>
-              <option value="tokyo">Токийский неон</option>
-              <option value="matte">Матовый фейд</option>
-              <option value="moody">Мрачный тёмный</option>
-              <option value="vintage">Выцветший винтаж</option>
-            </select>
-            <div class="preset-tooltip">
-              <div class="preset-name" id="color-name">—</div>
-              <div id="color-desc">Выберите пресет чтобы увидеть описание</div>
-            </div>
-          </div>
+        <div class="pc-tip" id="camera_tip"><div class="pc-tip-name" id="camera_tip_name"></div><div id="camera_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">🎨 Цвет / Грейдинг</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_color" onchange="updateTip('color');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="teal">Teal & Orange</option>
+            <option value="bleach">Отбеливающий обход</option>
+            <option value="warm">Тёплый аналог</option>
+            <option value="cold">Холодный скандинав</option>
+            <option value="tokyo">Токийский неон</option>
+            <option value="matte">Матовый фейд</option>
+            <option value="moody">Мрачный тёмный</option>
+            <option value="vintage">Выцветший винтаж</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip(\'color_tip\', this)">?</div>
         </div>
-
-        <div class="preset-col">
-          <div class="preset-col-label">🕰 Эпоха</div>
-          <div class="preset-select-wrap">
-            <select id="preset_era" onchange="updatePrompt()">
-              <option value="">— выберите —</option>
-              <option value="hollywood30">1930-е Голливуд</option>
-              <option value="noir40">1940-е Нуар</option>
-              <option value="london60">1960-е Свингующий Лондон</option>
-              <option value="disco70">1970-е Студия 54</option>
-              <option value="super90">1990-е Супермодель</option>
-              <option value="y2k">Y2K (2000–2004)</option>
-              <option value="tumblr">2000-е Тумблер</option>
-              <option value="quiet">Тихая роскошь</option>
-              <option value="soviet">Советский реализм</option>
-              <option value="newwave">Французская новая волна</option>
-              <option value="grunge">Гранж (1993)</option>
-              <option value="wkw">Вонг Кар-Вай</option>
-              <option value="newton">Хельмут Ньютон</option>
-            </select>
-            <div class="preset-tooltip">
-              <div class="preset-name" id="era-name">—</div>
-              <div id="era-desc">Выберите пресет чтобы увидеть описание</div>
-            </div>
-          </div>
+        <div class="pc-tip" id="color_tip"><div class="pc-tip-name" id="color_tip_name"></div><div id="color_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">🕰 Эпоха / Референс</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_era" onchange="updateTip('era');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="hollywood30">1930-е Голливуд</option>
+            <option value="noir40">1940-е Нуар</option>
+            <option value="london60">1960-е Свингующий Лондон</option>
+            <option value="disco70">1970-е Студия 54</option>
+            <option value="super90">1990-е Супермодель</option>
+            <option value="y2k">Y2K (2000–2004)</option>
+            <option value="tumblr">2000-е Тумблер</option>
+            <option value="quiet">Тихая роскошь 2023</option>
+            <option value="soviet">Советский реализм</option>
+            <option value="newwave">Французская новая волна</option>
+            <option value="grunge">Гранж (1993)</option>
+            <option value="wkw">Вонг Кар-Вай</option>
+            <option value="newton">Хельмут Ньютон</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip(\'era_tip\', this)">?</div>
         </div>
-
+        <div class="pc-tip" id="era_tip"><div class="pc-tip-name" id="era_tip_name"></div><div id="era_tip_desc"></div></div>
       </div>
     </div>
   </div>
-
-  <!-- 1. ПЕРСОНАЖ -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <div class="section-title">Персонаж</div>
-    </div>
-    <div class="section-body">
-      <div class="field-grid-3">
-        <div class="field">
-          <div class="field-label">Пол</div>
-          <select id="пол" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>женский</option>
-            <option>мужской</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Возраст</div>
-          <select id="возраст" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>18</option><option>20</option><option>25</option>
-            <option>30</option><option>35</option><option>40</option>
-            <option>45</option><option>50</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Этнотип</div>
-          <select id="этнотип" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>скандинавская</option><option>славянская</option>
-            <option>средиземноморская</option><option>западноевропейская</option>
-            <option>ближневосточная</option><option>латиноамериканская</option>
-            <option>восточноазиатская</option><option>африканская</option>
-            <option>смешанная</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-grid" style="margin-top:14px;">
-        <div class="field">
-          <div class="field-label">Телосложение</div>
-          <select id="телосложение" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>худощавое</option><option>стройное</option>
-            <option>среднее</option><option>спортивное</option><option>пышное</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Рост</div>
-          <select id="рост" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>невысокий</option><option>средний</option>
-            <option>выше среднего</option><option>высокий</option><option>модельный</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. ЛИЦО -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <div class="section-title">Лицо</div>
-    </div>
-    <div class="section-body">
-      <div class="field-grid">
-        <div class="field">
-          <div class="field-label">Форма лица</div>
-          <select id="форма_лица" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>овальное</option><option>сердцевидное</option><option>квадратное</option>
-            <option>круглое</option><option>ромбовидное</option><option>скульптурное</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Скулы</div>
-          <select id="скулы" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>мягкие</option><option>выраженные</option><option>высокие</option>
-            <option>скульптурные</option><option>деликатные</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Тон кожи</div>
-          <select id="тон_кожи" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>очень светлая</option><option>светлая</option><option>оливковая</option>
-            <option>средняя</option><option>загорелая</option><option>тёмная</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Текстура кожи</div>
-          <select id="текстура_кожи" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>идеально чистая</option><option>естественная</option>
-            <option>лёгкие веснушки</option><option>матовая</option><option>dewy</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. ГЛАЗА -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title">Глаза и взгляд</div>
-    </div>
-    <div class="section-body">
-      <div class="field-grid-3">
-        <div class="field">
-          <div class="field-label">Цвет глаз</div>
-          <select id="цвет_глаз" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>голубые</option><option>зелёные</option><option>ореховые</option>
-            <option>карие</option><option>янтарные</option><option>серые</option><option>почти чёрные</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Форма глаз</div>
-          <select id="форма_глаз" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>миндалевидные</option><option>крупные</option><option>глубоко посаженные</option>
-            <option>округлые</option><option>приподнятые уголки</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Взгляд</div>
-          <select id="взгляд" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>прямо в камеру</option><option>слегка мимо</option>
-            <option>в сторону</option><option>через плечо</option>
-            <option>задумчивый</option><option>смайз</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-grid" style="margin-top:14px;">
-        <div class="field">
-          <div class="field-label">Эмоция</div>
-          <select id="эмоция" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>спокойное</option><option>уверенное</option><option>дружелюбное</option>
-            <option>загадочное</option><option>премиальное</option><option>дерзкое</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Улыбка</div>
-          <select id="улыбка" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>без улыбки</option><option>лёгкая закрытая</option>
-            <option>уголками губ</option><option>широкая</option><option>естественная</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. ВОЛОСЫ -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">4</div>
-      <div class="section-title">Волосы</div>
-    </div>
-    <div class="section-body">
-      <div class="field-grid">
-        <div class="field">
-          <div class="field-label">Цвет волос</div>
-          <select id="цвет_волос" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>платиновый блонд</option><option>тёплый блонд</option><option>пепельный блонд</option>
-            <option>русые</option><option>каштановые</option><option>шоколадные</option>
-            <option>чёрные</option><option>рыжие</option><option>медные</option><option>седые</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Длина волос</div>
-          <select id="длина_волос" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>очень короткие</option><option>короткие</option><option>до подбородка</option>
-            <option>до плеч</option><option>ниже плеч</option><option>длинные</option><option>очень длинные</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Текстура волос</div>
-          <select id="текстура_волос" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>прямые</option><option>мягкие волны</option><option>объёмные волны</option>
-            <option>кудри</option><option>афро</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Укладка</div>
-          <select id="укладка" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>естественная</option><option>небрежная luxury</option>
-            <option>объём у корней</option><option>гладкая</option><option>ветер в волосах</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. КАМЕРА -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">5</div>
-      <div class="section-title">Камера и съёмка</div>
-    </div>
-    <div class="section-body">
-      <div class="field-grid-3">
-        <div class="field">
-          <div class="field-label">Кадр</div>
-          <select id="кадр" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>крупный план лица</option><option>портрет по плечи</option>
-            <option>поясной</option><option>по колено</option><option>полный рост</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Объектив</div>
-          <select id="объектив" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>35mm</option><option>50mm</option><option>85mm f/1.4</option>
-            <option>105mm</option><option>135mm</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Диафрагма</div>
-          <select id="диафрагма" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>f/1.4</option><option>f/1.8</option><option>f/2.8</option>
-            <option>f/4.0</option><option>f/5.6</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-grid" style="margin-top:14px;">
-        <div class="field">
-          <div class="field-label">Фон / Сцена</div>
-          <select id="фон" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>белая студия</option><option>размытый интерьер</option>
-            <option>городская улица</option><option>природа</option>
-            <option>кафе</option><option>тёмный фон</option><option>luxury интерьер</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Стиль съёмки</div>
-          <select id="стиль" onchange="updatePrompt()">
-            <option value="">— выберите —</option>
-            <option>editorial</option><option>lifestyle</option><option>бьюти</option>
-            <option>стрит</option><option>корпоративный</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- OUTPUT -->
-  <div class="output-section">
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('full')">📋 Структурированный промпт</div>
-      <div class="tab" onclick="switchTab('mini')">📱 Мини для соцсетей</div>
-    </div>
-    <div class="tab-content active" id="tab-full">
-      <div class="prompt-out" id="prompt-output">Выберите параметры выше — промпт сформируется автоматически...</div>
-      <div class="output-actions">
-        <button class="btn btn-primary btn-sm" onclick="copyPrompt()">Копировать</button>
-        <button class="btn btn-ghost btn-sm" onclick="resetAll()">Сбросить всё</button>
-      </div>
-    </div>
-    <div class="tab-content" id="tab-mini">
-      <div class="mini-out" id="mini-output">—</div>
-      <div class="output-actions">
-        <button class="btn btn-primary btn-sm" onclick="copyMini()">Копировать</button>
-      </div>
-    </div>
-  </div>
-
 </div>
 
-<!-- Scroll top -->
+<!-- 1. ПЕРСОНАЖ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">1</div><div class="sec-title">Персонаж</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Пол</div>
+        <select id="пол" onchange="updatePrompt()"><option value="">— выберите —</option><option>женский</option><option>мужской</option></select></div>
+      <div class="field"><div class="fl">Возраст</div>
+        <select id="возраст" onchange="updatePrompt()"><option value="">— выберите —</option><option>18</option><option>20</option><option>23</option><option>25</option><option>28</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option></select></div>
+      <div class="field"><div class="fl">Этнотип</div>
+        <select id="этнотип" onchange="updatePrompt()"><option value="">— выберите —</option><option>скандинавская</option><option>западноевропейская</option><option>восточноевропейская / славянская</option><option>средиземноморская</option><option>латиноамериканская</option><option>ближневосточная</option><option>южноазиатская</option><option>восточноазиатская</option><option>юго-восточноазиатская</option><option>африканская</option><option>смешанная</option></select></div>
+    </div>
+    <div class="fg3 mt">
+      <div class="field"><div class="fl">Телосложение</div>
+        <select id="телосложение" onchange="updatePrompt()"><option value="">— выберите —</option><option>очень хрупкое</option><option>худощавое</option><option>стройное</option><option>среднее</option><option>спортивное</option><option>пышное</option><option>полное</option></select></div>
+      <div class="field"><div class="fl">Рост</div>
+        <select id="рост" onchange="updatePrompt()"><option value="">— выберите —</option><option>невысокий (150–157)</option><option>ниже среднего (158–163)</option><option>средний (164–169)</option><option>выше среднего (170–175)</option><option>высокий (176–181)</option><option>модельный (182+)</option></select></div>
+      <div class="field"><div class="fl">Осанка</div>
+        <select id="осанка" onchange="updatePrompt()"><option value="">— выберите —</option><option>расслабленная</option><option>уверенная</option><option>элегантная</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. ЛИЦО -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">2</div><div class="sec-title">Лицо — структура</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg2">
+      <div class="field"><div class="fl">Форма лица</div>
+        <div class="ms-wrap" id="ms_форма_лица" onclick="msClick(event,'форма_лица')">
+          <div class="ms-tags" id="tags_форма_лица"><span class="ms-ph">Выберите форму лица</span></div>
+          <div class="ms-dropdown" id="dd_форма_лица"></div>
+        </div></div>
+      <div class="field"><div class="fl">Скулы</div>
+        <select id="скулы" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкие</option><option>выраженные</option><option>высокие</option><option>скульптурные</option><option>деликатные</option><option>широкие</option></select></div>
+      <div class="field"><div class="fl">Челюсть</div>
+        <select id="челюсть" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкая</option><option>чёткая</option><option>узкая</option><option>широкая</option><option>сильная</option><option>деликатная</option></select></div>
+      <div class="field"><div class="fl">Подбородок</div>
+        <select id="подбородок" onchange="updatePrompt()"><option value="">— выберите —</option><option>аккуратный</option><option>сужающийся</option><option>выраженный</option><option>мягкий</option><option>V-образный</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. КОЖА -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">3</div><div class="sec-title">Кожа</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Тон кожи</div>
+        <select id="тон_кожи" onchange="updatePrompt()"><option value="">— выберите —</option><option>очень светлая</option><option>светлая нейтральная</option><option>светлая тёплая</option><option>оливковая</option><option>средиземноморская</option><option>загорелая</option><option>средняя тёплая</option><option>глубокая тёмная</option></select></div>
+      <div class="field"><div class="fl">Качество кожи</div>
+        <select id="качество_кожи" onchange="updatePrompt()"><option value="">— выберите —</option><option>идеально чистая</option><option>естественная (поры видны)</option><option>лёгкие веснушки</option><option>выраженные веснушки</option><option>матовая</option><option>лёгкий блеск (dewy)</option><option>возрастные текстуры (35+)</option></select></div>
+      <div class="field"><div class="fl">Микротекстура</div>
+        <select id="микро" onchange="updatePrompt()"><option value="">— выберите —</option><option>поры</option><option>микрорельеф</option><option>неровности</option></select></div>
+      <div class="field"><div class="fl">Свет кожи</div>
+        <select id="свет_кожи" onchange="updatePrompt()"><option value="">— выберите —</option><option>SSS (subsurface scattering)</option><option>рассеивание</option><option>реалистичный свет</option></select></div>
+      <div class="field"><div class="fl">Возраст кожи</div>
+        <select id="возраст_кожи" onchange="updatePrompt()"><option value="">— выберите —</option><option>молодая</option><option>линии</option><option>зрелая</option></select></div>
+      <div class="field"><div class="fl">Несовершенства</div>
+        <select id="несоверш" onchange="updatePrompt()"><option value="">— нет —</option><option>асимметрия</option><option>неровности</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. ГЛАЗА -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">4</div><div class="sec-title">Глаза</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg2">
+      <div class="field"><div class="fl">Цвет глаз</div>
+        <div class="ms-wrap" id="ms_цвет_глаз" onclick="msClick(event,'цвет_глаз')">
+          <div class="ms-tags" id="tags_цвет_глаз"><span class="ms-ph">Выберите цвет глаз</span></div>
+          <div class="ms-dropdown" id="dd_цвет_глаз"></div>
+        </div></div>
+      <div class="field"><div class="fl">Форма глаз</div>
+        <div class="ms-wrap" id="ms_форма_глаз" onclick="msClick(event,'форма_глаз')">
+          <div class="ms-tags" id="tags_форма_глаз"><span class="ms-ph">Выберите форму глаз</span></div>
+          <div class="ms-dropdown" id="dd_форма_глаз"></div>
+        </div></div>
+      <div class="field"><div class="fl">Взгляд</div>
+        <div class="ms-wrap" id="ms_взгляд" onclick="msClick(event,'взгляд')">
+          <div class="ms-tags" id="tags_взгляд"><span class="ms-ph">Выберите взгляд</span></div>
+          <div class="ms-dropdown" id="dd_взгляд"></div>
+        </div></div>
+      <div class="field"><div class="fl">Фокус взгляда</div>
+        <div class="ms-wrap" id="ms_фокус" onclick="msClick(event,'фокус')">
+          <div class="ms-tags" id="tags_фокус"><span class="ms-ph">Выберите фокус</span></div>
+          <div class="ms-dropdown" id="dd_фокус"></div>
+        </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. БРОВИ НОС ГУБЫ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">5</div><div class="sec-title">Брови, нос, губы</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Брови</div>
+        <select id="брови" onchange="updatePrompt()"><option value="">— выберите —</option><option>прямые</option><option>с мягкой аркой</option><option>выразительные</option><option>густые</option><option>тёмные густые</option><option>аккуратные</option></select></div>
+      <div class="field"><div class="fl">Нос</div>
+        <select id="нос" onchange="updatePrompt()"><option value="">— выберите —</option><option>прямой</option><option>узкий</option><option>аккуратный</option><option>скульптурный</option><option>мягкий натуральный</option></select></div>
+      <div class="field"><div class="fl">Губы</div>
+        <select id="губы" onchange="updatePrompt()"><option value="">— выберите —</option><option>естественно полные</option><option>средней полноты</option><option>мягко очерченные</option><option>более тонкие</option><option>чёткий контур</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. ЭМОЦИИ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">6</div><div class="sec-title">Эмоции и выражение</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Эмоция</div>
+        <div class="ms-wrap" id="ms_эмоция" onclick="msClick(event,'эмоция')">
+          <div class="ms-tags" id="tags_эмоция"><span class="ms-ph">Выберите эмоцию</span></div>
+          <div class="ms-dropdown" id="dd_эмоция"></div>
+        </div></div>
+      <div class="field"><div class="fl">Микроэмоция</div>
+        <div class="ms-wrap" id="ms_микроэмоция" onclick="msClick(event,'микроэмоция')">
+          <div class="ms-tags" id="tags_микроэмоция"><span class="ms-ph">Выберите микроэмоцию</span></div>
+          <div class="ms-dropdown" id="dd_микроэмоция"></div>
+        </div></div>
+      <div class="field"><div class="fl">Улыбка</div>
+        <div class="ms-wrap" id="ms_улыбка" onclick="msClick(event,'улыбка')">
+          <div class="ms-tags" id="tags_улыбка"><span class="ms-ph">Выберите улыбку</span></div>
+          <div class="ms-dropdown" id="dd_улыбка"></div>
+        </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. ГОЛОВА -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">7</div><div class="sec-title">Голова и движение</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg2">
+      <div class="field"><div class="fl">Положение головы</div>
+        <div class="ms-wrap" id="ms_поворот_головы" onclick="msClick(event,'поворот_головы')">
+          <div class="ms-tags" id="tags_поворот_головы"><span class="ms-ph">Выберите положение</span></div>
+          <div class="ms-dropdown" id="dd_поворот_головы"></div>
+        </div></div>
+      <div class="field"><div class="fl">Движение головы</div>
+        <div class="ms-wrap" id="ms_движение_головы" onclick="msClick(event,'движение_головы')">
+          <div class="ms-tags" id="tags_движение_головы"><span class="ms-ph">Выберите движение</span></div>
+          <div class="ms-dropdown" id="dd_движение_головы"></div>
+        </div></div>
+      <div class="field"><div class="fl">Мимика и микродвижения</div>
+        <div class="ms-wrap" id="ms_мимика" onclick="msClick(event,'мимика')">
+          <div class="ms-tags" id="tags_мимика"><span class="ms-ph">Выберите мимику</span></div>
+          <div class="ms-dropdown" id="dd_мимика"></div>
+        </div></div>
+      <div class="field"><div class="fl">Шея и осанка</div>
+        <div class="ms-wrap" id="ms_шея" onclick="msClick(event,'шея')">
+          <div class="ms-tags" id="tags_шея"><span class="ms-ph">Выберите осанку</span></div>
+          <div class="ms-dropdown" id="dd_шея"></div>
+        </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. ВОЛОСЫ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">8</div><div class="sec-title">Волосы</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg2">
+      <div class="field"><div class="fl">Цвет волос</div>
+        <div class="ms-wrap" id="ms_цвет_волос" onclick="msClick(event,'цвет_волос')">
+          <div class="ms-tags" id="tags_цвет_волос"><span class="ms-ph">Выберите цвет волос</span></div>
+          <div class="ms-dropdown" id="dd_цвет_волос"></div>
+        </div></div>
+      <div class="field"><div class="fl">Длина волос</div>
+        <div class="ms-wrap" id="ms_длина_волос" onclick="msClick(event,'длина_волос')">
+          <div class="ms-tags" id="tags_длина_волос"><span class="ms-ph">Выберите длину</span></div>
+          <div class="ms-dropdown" id="dd_длина_волос"></div>
+        </div></div>
+      <div class="field"><div class="fl">Текстура волос</div>
+        <div class="ms-wrap" id="ms_текстура_волос" onclick="msClick(event,'текстура_волос')">
+          <div class="ms-tags" id="tags_текстура_волос"><span class="ms-ph">Выберите текстуру</span></div>
+          <div class="ms-dropdown" id="dd_текстура_волос"></div>
+        </div></div>
+      <div class="field"><div class="fl">Укладка</div>
+        <div class="ms-wrap" id="ms_укладка" onclick="msClick(event,'укладка')">
+          <div class="ms-tags" id="tags_укладка"><span class="ms-ph">Выберите укладку</span></div>
+          <div class="ms-dropdown" id="dd_укладка"></div>
+        </div></div>
+      <div class="field"><div class="fl">Пробор</div>
+        <div class="ms-wrap" id="ms_пробор" onclick="msClick(event,'пробор')">
+          <div class="ms-tags" id="tags_пробор"><span class="ms-ph">Выберите пробор</span></div>
+          <div class="ms-dropdown" id="dd_пробор"></div>
+        </div></div>
+      <div class="field"><div class="fl">Женские стрижки</div>
+        <div class="ms-wrap" id="ms_женские_стрижки" onclick="msClick(event,'женские_стрижки')">
+          <div class="ms-tags" id="tags_женские_стрижки"><span class="ms-ph">Выберите стрижку</span></div>
+          <div class="ms-dropdown" id="dd_женские_стрижки"></div>
+        </div></div>
+      <div class="field"><div class="fl">Мужские стрижки</div>
+        <div class="ms-wrap" id="ms_мужские_стрижки" onclick="msClick(event,'мужские_стрижки')">
+          <div class="ms-tags" id="tags_мужские_стрижки"><span class="ms-ph">Выберите стрижку</span></div>
+          <div class="ms-dropdown" id="dd_мужские_стрижки"></div>
+        </div></div>
+      <div class="field"><div class="fl">Макияж (жен.)</div>
+        <select id="макияж" onchange="updatePrompt()"><option value="">— выберите —</option><option>без макияжа</option><option>натуральный минимальный</option><option>лёгкий естественный</option><option>дневной ухоженный</option><option>вечерний / гламурный</option><option>акцент на глаза</option><option>акцент на губы</option></select></div>
+      <div class="field"><div class="fl">Растительность (муж.)</div>
+        <select id="борода" onchange="updatePrompt()"><option value="">— нет —</option><option>гладко выбрит</option><option>лёгкая щетина</option><option>средняя щетина</option><option>густая щетина</option><option>короткая борода</option><option>полная борода</option><option>усы</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. КАМЕРА -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">9</div><div class="sec-title">Камера и съёмка</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Тип кадра</div>
+        <div class="ms-wrap" id="ms_кадр" onclick="msClick(event,'кадр')">
+          <div class="ms-tags" id="tags_кадр"><span class="ms-ph">Выберите кадр</span></div>
+          <div class="ms-dropdown" id="dd_кадр"></div>
+        </div></div>
+      <div class="field"><div class="fl">Объектив</div>
+        <div class="ms-wrap" id="ms_объектив" onclick="msClick(event,'объектив')">
+          <div class="ms-tags" id="tags_объектив"><span class="ms-ph">Выберите объектив</span></div>
+          <div class="ms-dropdown" id="dd_объектив"></div>
+        </div></div>
+      <div class="field"><div class="fl">Диафрагма</div>
+        <div class="ms-wrap" id="ms_диафрагма" onclick="msClick(event,'диафрагма')">
+          <div class="ms-tags" id="tags_диафрагма"><span class="ms-ph">Выберите диафрагму</span></div>
+          <div class="ms-dropdown" id="dd_диафрагма"></div>
+        </div></div>
+      <div class="field"><div class="fl">Выдержка</div>
+        <div class="ms-wrap" id="ms_выдержка" onclick="msClick(event,'выдержка')">
+          <div class="ms-tags" id="tags_выдержка"><span class="ms-ph">Выберите выдержку</span></div>
+          <div class="ms-dropdown" id="dd_выдержка"></div>
+        </div></div>
+      <div class="field"><div class="fl">ISO</div>
+        <div class="ms-wrap" id="ms_iso" onclick="msClick(event,'iso')">
+          <div class="ms-tags" id="tags_iso"><span class="ms-ph">Выберите ISO</span></div>
+          <div class="ms-dropdown" id="dd_iso"></div>
+        </div></div>
+      <div class="field"><div class="fl">Физика изображения</div>
+        <div class="ms-wrap" id="ms_физика" onclick="msClick(event,'физика')">
+          <div class="ms-tags" id="tags_физика"><span class="ms-ph">Выберите физику</span></div>
+          <div class="ms-dropdown" id="dd_физика"></div>
+        </div></div>
+    </div>
+    <div class="fg2 mt">
+      <div class="field"><div class="fl">Боке</div>
+        <select id="боке" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкое</option><option>жёсткое</option></select></div>
+      <div class="field"><div class="fl">Оптика</div>
+        <select id="оптика" onchange="updatePrompt()"><option value="">— выберите —</option><option>чистая</option><option>хроматические аберрации</option><option>дисторсия</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. СЦЕНА -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">10</div><div class="sec-title">Сцена и окружение</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Тип сцены</div>
+        <div class="ms-wrap" id="ms_сцена" onclick="msClick(event,'сцена')">
+          <div class="ms-tags" id="tags_сцена"><span class="ms-ph">Выберите сцену</span></div>
+          <div class="ms-dropdown" id="dd_сцена"></div>
+        </div></div>
+      <div class="field"><div class="fl">Характер фона</div>
+        <div class="ms-wrap" id="ms_фон" onclick="msClick(event,'фон')">
+          <div class="ms-tags" id="tags_фон"><span class="ms-ph">Выберите фон</span></div>
+          <div class="ms-dropdown" id="dd_фон"></div>
+        </div></div>
+      <div class="field"><div class="fl">Погода и атмосфера</div>
+        <div class="ms-wrap" id="ms_погода" onclick="msClick(event,'погода')">
+          <div class="ms-tags" id="tags_погода"><span class="ms-ph">Выберите погоду</span></div>
+          <div class="ms-dropdown" id="dd_погода"></div>
+        </div></div>
+    </div>
+    <div class="field mt"><div class="fl">Локация (свободный ввод)</div>
+      <textarea id="локация" placeholder="Опиши любую сцену, место, контекст..." onchange="updatePrompt()" oninput="updatePrompt()"></textarea></div>
+  </div>
+</div>
+
+<!-- 11. КОМПОЗИЦИЯ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">11</div><div class="sec-title">Композиция</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="field"><div class="fl">Композиция кадра</div>
+      <div class="ms-wrap" id="ms_композиция" onclick="msClick(event,'композиция')">
+        <div class="ms-tags" id="tags_композиция"><span class="ms-ph">Выберите композицию</span></div>
+        <div class="ms-dropdown" id="dd_композиция"></div>
+      </div></div>
+  </div>
+</div>
+
+<!-- 12. ОДЕЖДА И СТИЛЬ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">12</div><div class="sec-title">Одежда и стиль съёмки</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <div class="fg3">
+      <div class="field"><div class="fl">Одежда</div>
+        <div class="ms-wrap" id="ms_одежда" onclick="msClick(event,'одежда')">
+          <div class="ms-tags" id="tags_одежда"><span class="ms-ph">Выберите одежду</span></div>
+          <div class="ms-dropdown" id="dd_одежда"></div>
+        </div></div>
+      <div class="field"><div class="fl">Аксессуары</div>
+        <div class="ms-wrap" id="ms_аксессуары" onclick="msClick(event,'аксессуары')">
+          <div class="ms-tags" id="tags_аксессуары"><span class="ms-ph">Выберите аксессуары</span></div>
+          <div class="ms-dropdown" id="dd_аксессуары"></div>
+        </div></div>
+      <div class="field"><div class="fl">Стиль фотографии</div>
+        <select id="стиль" onchange="updatePrompt()"><option value="">— выберите —</option><option>коммерческий стоковый</option><option>editorial / журнальный</option><option>beauty-съёмка</option><option>lifestyle</option><option>корпоративный портрет</option><option>уличная мода</option><option>iPhone фото</option></select></div>
+      <div class="field"><div class="fl">Цель</div>
+        <select id="цель" onchange="updatePrompt()"><option value="">— выберите —</option><option>реклама</option><option>портрет</option><option>соцсети</option><option>стрит фото</option></select></div>
+      <div class="field"><div class="fl">Качество</div>
+        <select id="качество" onchange="updatePrompt()"><option value="">— выберите —</option><option>ультрареализм</option><option>DSLR</option><option>8K</option></select></div>
+    </div>
+    <div class="field mt"><div class="fl">Одежда (свободный ввод)</div>
+      <textarea id="одежда_текст" placeholder="Опишите любую одежду свободно..." onchange="updatePrompt()" oninput="updatePrompt()"></textarea></div>
+  </div>
+</div>
+
+<!-- 13. НЕГАТИВ -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-num">13</div><div class="sec-title">Негативный промпт</div><div class="sec-arrow">▾</div>
+  </div>
+  <div class="sec-body">
+    <textarea id="негатив" oninput="updatePrompt()" style="min-height:60px;">plastic skin, CGI, 3D render, doll face, mannequin, perfect symmetry, beauty filter, over-smoothing, waxy skin, cartoon, anime, artificial eyes, unnatural proportions, generation artifacts, airbrushed, fake</textarea>
+  </div>
+</div>
+
+<!-- PRESETS -->
+<div class="section">
+  <div class="sec-hdr" onclick="toggleSec(this)">
+    <div class="sec-title">🎛 Пресеты</div>
+    <div class="sec-arrow">▾</div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- OUTPUT BAR -->
+<div class="output-bar">
+  <div class="out-tabs">
+    <div class="out-tab active" onclick="switchOut('full')">📋 Структурированный промпт</div>
+    <div class="out-tab" onclick="switchOut('mini')">📱 Мини для соцсетей</div>
+  </div>
+  <div class="out-pane active" id="op_full">
+    <div class="out-text" id="out_full">Выберите параметры выше — промпт сформируется автоматически...</div>
+    <div class="out-actions">
+      <button class="btn btn-p" onclick="copyText('out_full')">Копировать</button>
+      <button class="btn btn-g" onclick="resetAll()">Сброс</button>
+    </div>
+  </div>
+  <div class="out-pane" id="op_mini">
+    <div class="out-mini-text" id="out_mini">—</div>
+    <div class="out-actions">
+      <button class="btn btn-p" onclick="copyText('out_mini')">Копировать</button>
+    </div>
+  </div>
+</div>
+
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-const PRESET_DESCS = {
-  light: {
-    rembrandt: { name: "Рембрандт", desc: "Один источник 45° сбоку — треугольник света на щеке в тени. Классика портрета: драматично, благородно, узнаваемо." },
-    split: { name: "Раздельный свет", desc: "Лицо пополам: одна сторона в свете, другая в полной тени. Контраст 8:1. Максимально жёстко и графично." },
-    butterfly: { name: "Бабочка / Paramount", desc: "Источник прямо перед лицом и высоко — тень под носом бабочкой. Подчёркивает скулы. Голливуд 40-х." },
-    rim: { name: "Контровой / Rim", desc: "Свет сзади — светящийся контур волос и лица. Лицо в тени. Мистика, кино, разделение от фона." },
-    chiaroscuro: { name: "Кьяроскуро", desc: "Как у Караваджо: один жёсткий луч, полная чернота вокруг. Контраст 16:1. Живописно и театрально." },
-    golden: { name: "Золотой час / Окно", desc: "Тёплый солнечный свет через окно, 3200K. Длинные тени, золотисто-оранжевая кожа. Уютно и интимно." },
-    neon: { name: "Неоновый дуэт", desc: "Два цветных источника: пурпурный и голубой с разных сторон. Цветовой раскол на лице. Киберпанк, editorial." },
-    candle: { name: "Только свечи", desc: "Только пламя свечей: 1800K, янтарный, быстрое затухание, глубокие тени. Вне времени и очень интимно." },
-    overcast: { name: "Пасмурный плоский", desc: "Пасмурное небо — гигантский софтбокс. Почти нет теней, свет равномерный. Кожа выглядит как шёлк." },
-  },
-  camera: {
-    ricoh: { name: "Ricoh GR", desc: "Культовая стрит-камера. Резкий центр, виньетка, зерно ISO 800. Документально, без гламура, честно." },
-    portra: { name: "Kodak Portra 400", desc: "Легендарная портретная плёнка. Тёплые тона кожи, мягкие блики, кремовые цвета. Вечная классика." },
-    ektar: { name: "Kodak Ektar 100", desc: "Самая мелкозернистая плёнка. Насыщенные яркие цвета, высокий контраст, сочные красные и оранжевые." },
-    fuji: { name: "Fujifilm Superia", desc: "Японская плёнка. Холодноватые тени с зелёным, нейтральная кожа. Ощущение случайного повседневного кадра." },
-    contax: { name: "Contax T2", desc: "Культовый компакт с Zeiss. Трёхмерное разделение объекта от фона, шёлковое боке. Любимица fashion-фотографов." },
-    leica: { name: "Leica M", desc: "Немецкая легенда. Объёмное 3D-разделение, точная резкость, богатые тени. Тихая дорогая роскошь." },
-    polaroid: { name: "Polaroid 600", desc: "Моментальный снимок: сдвинутые цвета, тяжёлая виньетка, мягкий фокус. Ностальгия и мечта." },
-    disposable: { name: "Одноразовая камера", desc: "Встроенная вспышка в лоб, зерно, плоские цвета. Анти-гламур. Честная вечеринка. Сейчас в тренде." },
-    canon: { name: "Canon AE-1", desc: "Самая любимая плёночная камера. Тёплый золотистый тон, мягкое боке, органичное живое качество." },
-  },
-  color: {
-    teal: { name: "Teal & Orange", desc: "Голливудский блокбастер. Тени — бирюза, кожа — тёплый апельсин. Высокий контраст. Кинематографично." },
-    bleach: { name: "Отбеливающий обход", desc: "Bleach bypass: цвета почти смыты, экстремальный контраст, металлик на светах. Военное кино, Se7en." },
-    warm: { name: "Тёплый аналог", desc: "Ностальгия по журналам 70-х. Тёплый сдвиг, поднятые чёрные, кремовые блики. Кожа живая и тёплая." },
-    cold: { name: "Холодный скандинав", desc: "Северный минимализм. Холодный сдвиг, сине-серые тени, почти монохром. Чистота и меланхолия." },
-    tokyo: { name: "Токийский неон", desc: "Ночной дождь и неон. Глубокий чёрный, отражения пурпура и бирюзы. Blade Runner, Lost in Translation." },
-    matte: { name: "Матовый фейд", desc: "Современный editorial. Чёрные подняты до серого, низкий контраст, приглушённые цвета. Instagram-журнал." },
-    moody: { name: "Мрачный тёмный", desc: "Кино-драма. Тёмный ключ, настоящий чёрный, один цветовой акцент в светах. Сериальное напряжение." },
-    vintage: { name: "Выцветший винтаж", desc: "Снимок с чердака: тяжёлый фейд, жёлтый каст, кремовые пересветы. Как фото 40-летней давности." },
-  },
-  era: {
-    hollywood30: { name: "1930-е Голливуд", desc: "Студийный портрет Золотого Голливуда. Серебристый свет, идеальные волны, шёлк. Грета Гарбо." },
-    noir40: { name: "1940-е Нуар", desc: "Чёрно-белый нуар. Жёсткие тени, дым, ночной город. Роковая женщина или детектив в плаще." },
-    london60: { name: "1960-е Свингующий Лондон", desc: "Твигги, огромные глаза, минимализм. Геометрические стрижки Видала Сассуна. Молодость и бунт." },
-    disco70: { name: "1970-е Студия 54", desc: "Тёплая плёнка, золото, блёстки, бронзовая кожа. Дискотечный гламур и гедонизм." },
-    super90: { name: "1990-е Супермодель", desc: "Calvin Klein минимализм. Зернистая плёнка, натуральный свет, тонкие брови. Kate Moss — без усилий." },
-    y2k: { name: "Y2K (2000–2004)", desc: "Цифровой гиперреализм нулевых. Перенасыщение, глянец, блёстки. Paris Hilton, максимализм." },
-    tumblr: { name: "2000-е Тумблер", desc: "Выцветшие пастели, мягкий фокус, меланхолия. Винтаж, природа, искренняя молодость нулевых." },
-    quiet: { name: "Тихая роскошь", desc: "Loro Piana, The Row. Кашемир, беж, лён. Ни одного лого. Дорого именно потому что не кричит." },
-    soviet: { name: "Советский реализм", desc: "Героический портрет: десатурация, прямой взгляд, простая одежда. Достоинство и сила." },
-    newwave: { name: "Французская новая волна", desc: "Годар, Трюффо. Ч/б, доступный свет, интеллектуальная отстранённость. Анна Карина, Париж." },
-    grunge: { name: "Гранж (1993)", desc: "Сиэтл, подвал, зерно. Тёмная плёнка, вспышка или плохой свет. Кобейн, усталость, фланель." },
-    wkw: { name: "Вонг Кар-Вай", desc: "Motion blur, янтарный и зелёный, мокрые поверхности. Тоска и время. «Любовное настроение»." },
-    newton: { name: "Хельмут Ньютон", desc: "Власть, доминирование, архитектурное тело. Жёсткий контраст, бассейн или белый кабинет." },
-  }
+// ── MULTISELECT DATA ──
+const MS_DATA = {
+  форма_лица:['овальное лицо','вытянутое овальное','круглое лицо','сердцевидное лицо','квадратное лицо','прямоугольное лицо','ромбовидное лицо','скульптурное лицо','лицо с выраженными скулами','лицо с чёткой линией челюсти','гармоничные пропорции лица','V-образная форма лица','компактное лицо'],
+  цвет_глаз:['светло-голубые','голубые','ледяные голубые','серо-голубые','глубокие синие','светло-зелёные','зелёные','изумрудные','серо-зелёные','светло-карие','карие','тёмно-карие','ореховые','медово-карие','янтарные','серые','дымчато-серые','графитовые','гетерохромия','естественный рисунок радужки','реалистичные блики в глазах','живой влажный блеск глаз'],
+  форма_глаз:['миндалевидные','крупные','маленькие','глубоко посаженные','широко посаженные','близко посаженные','округлые','узкие','азиатский разрез','приподнятые уголки','опущенные уголки','тяжёлое верхнее веко','выразительные','сонный взгляд','раскрытый взгляд'],
+  взгляд:['прямо в камеру','слегка мимо камеры','в сторону','вниз (задумчиво)','вверх','через плечо','закрытые глаза','полузакрытые глаза','подмигивание','лёгкий прищур','задумчивый взгляд','живой взгляд','кинематографичный взгляд','усталый взгляд','холодный взгляд','тёплый взгляд','уверенный взгляд','мечтательный взгляд','случайный живой взгляд'],
+  фокус:['прямой контакт','живой фокус глаз','расфокусированный взгляд','мягкий естественный фокус','кинематографичный фокус взгляда','неидеальный фокус глаз'],
+  эмоция:['спокойное выражение лица','уверенное выражение','дружелюбное выражение','тёплое выражение','нейтральное выражение','естественное выражение','премиальное выражение лица','дорогой спокойный вайб','редакционное выражение лица','модельное выражение лица','кинематографичное выражение','лёгкая радость','искренняя радость','сдержанная улыбка','живое веселье','улыбка глазами','задумчивое выражение','мечтательное выражение','лёгкая усталость','сонное выражение','дерзкое выражение','игривое выражение','ироничное выражение','холодное выражение','загадочное выражение','провокационное выражение','самоуверенное выражение','живое случайное выражение','непостановочное выражение','кривляние','гримаса','надутые губы','приподнятая бровь','улыбка с прищуром','закусывание губы','удивлённая реакция','смех в моменте'],
+  микроэмоция:['лёгкая задумчивость','спокойная уверенность','мягкая эмоциональность','внутреннее напряжение','эмоциональная расслабленность','микроулыбка','едва заметная улыбка','микронапряжение губ','живое движение губ','неидеальная улыбка','случайная эмоция','живое движение глаз','бегающий взгляд','лёгкое сужение глаз','эмоция в глазах','мимолётная эмоция','живой момент','микроасимметрия лица','непостановочная мимика','микродвижения щёк','микродвижения бровей','ироничная полуулыбка','лёгкое смущение','скрытая усталость','подавленная улыбка','эмоциональная неоднозначность'],
+  улыбка:['без улыбки','лёгкая закрытая улыбка','улыбка уголками губ','улыбка глазами (смайз)','широкая улыбка','естественная улыбка','идеальная рекламная улыбка','неровная улыбка','неидеальная улыбка','улыбка с зубами','закрытая улыбка','сдержанная улыбка','игривая улыбка','саркастическая улыбка','улыбка с прищуром','смех в моменте'],
+  поворот_головы:['анфас','лёгкий поворот головы','поворот головы 3/4','профиль 3/4','почти профиль','полный профиль','лёгкий наклон головы','наклон головы вбок','голова слегка опущена','голова слегка приподнята','подбородок чуть приподнят','подбородок чуть опущен','взгляд через плечо','голова повёрнута через плечо','естественная асимметрия положения головы','живое положение головы','расслабленное положение головы','уверенная постановка головы'],
+  движение_головы:['лёгкое движение головы','движение в момент съёмки','голова в динамике','микродвижение головы','резкий поворот головы','плавный поворот головы','движение во время ходьбы','движение во время разговора','живой случайный момент','непостановочная динамика','спонтанное движение','размытое движение волос','лёгкий motion blur','кадр пойман в движении','документальная естественность'],
+  мимика:['естественная мимика','живые мышцы лица','микродвижения лица','неидеальная мимика','лёгкое напряжение мышц лица','расслабленные мышцы лица','естественная асимметрия мимики','движение бровей','микродвижение губ','живые щёки','живое лицо в моменте','реакция в кадре','непостановочное выражение','случайная эмоция','живая человеческая мимика'],
+  шея:['расслабленная шея','вытянутая шея','естественное положение шеи','модельная постановка шеи','лёгкое напряжение шеи','мягкая линия шеи','выраженная линия шеи','естественная осанка головы','неидеальная осанка','уверенная осанка','кинематографичная постановка головы'],
+  цвет_волос:['платиновый блонд','холодный блонд','тёплый блонд','пепельный блонд','бежевый блонд','золотистый блонд','медовый блонд','кремовый блонд','грязный блонд','тёмный блонд','клубничный блонд','светло-русые','русые','тёмно-русые','пепельно-русые','светло-каштановые','каштановые','тёмно-каштановые','шоколадные','кофейные','натуральные чёрные','угольно-чёрные','мягкие чёрные','медные','рыжие','тёмно-рыжие','янтарно-рыжие','натуральные рыжие','седые','серебристые','натуральная седина','частичная седина','омбре','балаяж','мелирование','выгоревшие на солнце'],
+  длина_волос:['обритая голова','очень короткие','короткие','средняя длина','до подбородка','каре','до плеч','ниже плеч','длинные','очень длинные'],
+  текстура_волос:['прямые','гладкие','слегка волнистые','мягкие волны','объёмные волны','крупные локоны','мелкие локоны','кудрявые','афро-текстура','непослушные','пушистые','мокрая текстура','естественная текстура'],
+  укладка:['естественная укладка','небрежная люксовая','объём у корней','гладкая укладка','зализанные волосы','ветер в волосах','слегка растрёпанные','волосы в движении','свободно падающие','открытое лицо','волосы за ухо','собранные','низкий хвост','высокий хвост','небрежный пучок','гладкий пучок','коса','две косы','мокрая укладка','редакционная укладка','уличная модная укладка'],
+  пробор:['центральный пробор','боковой пробор','слегка смещённый пробор','без чёткого пробора','естественный пробор'],
+  женские_стрижки:['каре','удлинённое каре','боб','длинный боб','пикси','каскад','лесенка','ровный срез','рваная стрижка','асимметричная стрижка','шэг','волчья стрижка','маллет','чёлка-шторка','прямая чёлка','косая чёлка','микрочёлка','длинные слои у лица'],
+  мужские_стрижки:['стрижка под машинку','классическая короткая','плавный переход','низкий фейд','средний фейд','высокий фейд','фейд под кожу','андеркат','короткий текстурный кроп','зачёс назад','боковой пробор','длинная чёлка-шторка','помпадур','квифф','мужской пучок','верхний пучок','длинные мужские волосы','небрежная мужская стрижка'],
+  кадр:['крупный план лица','портрет по плечи','поясной портрет','полный рост','детальный кроп лица','средний план','кинематографичный кадр','редакционный портрет','уличный портрет','лайфстайл кадр','candid кадр'],
+  объектив:['24mm широкоугольный','28mm документальный','35mm контекстный','50mm естественный','85mm портретный','105mm beauty compression','135mm fashion compression','200mm телеобъектив','аналоговый объектив','винтажный объектив','мягкий портретный объектив','резкий современный объектив'],
+  диафрагма:['f/1.0 сверхразмытый фон','f/1.2','f/1.4','f/1.8','f/2.0','f/2.8','f/3.5','f/4.0','f/5.6','глубокий фокус','маленькая глубина резкости','очень малая глубина резкости','естественная глубина резкости'],
+  выдержка:['1/8000 заморозка движения','1/4000','1/2000','1/1000','1/500','1/250','1/125','1/60','1/30','1/15','лёгкий motion blur','сильный motion blur','замороженное движение','естественная выдержка сцены'],
+  iso:['ISO 50 чистое изображение','ISO 100','ISO 200','ISO 400','ISO 800','ISO 1600','ISO 3200','ISO 6400','лёгкий цифровой шум','плёночная зернистость','аналоговый шум'],
+  физика:['естественная глубина резкости','оптическое боке','кремовое боке','мягкое боке','жёсткое боке','лёгкие хроматические аберрации','микроконтраст кожи','натуральная резкость','неидеальная оптика','реалистичная экспозиция','микрошум сенсора','аналоговая зернистость','DSLR реализм','плёночный характер изображения'],
+  сцена:['реальный жилой интерьер','уютная домашняя сцена','минималистичный интерьер','современная квартира','кафе интерьер','ресторан интерьер','офисная среда','креативная студия','гримерка','закулисье съёмки','городская улица','узкая городская улица','современный город','старый европейский город','деловой район','жилой район','подъезд / лестничная клетка','дворовая среда','метро станция','природный фон','лесная среда','парк','пляж','побережье','поле','горы','озеро','река','fashion backstage','candid момент','случайный кадр на улице','документальная сцена','street photography момент','атмосферная сцена','размытый фон (bokeh)','фон с людьми','фон с движением'],
+  фон:['мягко размытый фон','сильное боке','естественная перспектива','глубокое пространство','многослойный фон','реалистичная глубина резкости','неидеальный фон','живой фон с деталями','фон с людьми в движении','чистый минималистичный фон','архитектурно сложный фон','атмосферный фон','естественный световой фон'],
+  погода:['ясная погода','облачная погода','пасмурно','дождь','мокрый асфальт','туман','снег','ветреная погода','золотой час','синий час','жёсткий дневной свет','мягкий рассеянный свет'],
+  композиция:['центр кадра','правило третей','золотое сечение','симметрия','асимметрия','диагональная композиция','крупный портрет','свободное кадрирование','плотное кадрирование','воздушный кадр','глубокая перспектива','многоплановость','негативное пространство','статичный кадр','динамичный кадр','пойманный момент','candid композиция'],
+  одежда:['белая футболка','чёрный топ','рубашка (классика)','деловой жакет','кашемировый свитер','платье','голые плечи (beauty-кадр)','худи / casual','джинсы','кожаная куртка','пальто','деловой костюм','открытое платье','спортивная одежда'],
+  аксессуары:['без аксессуаров','серьги минимальные','серьги выразительные','тонкая цепочка','очки (оптические)','солнцезащитные очки','часы','кольцо','браслет','шляпа','кепка','шарф'],
 };
 
-const PRESET_EN = {
-  light: {
-    rembrandt: "Rembrandt lighting: single key light 45 degrees to side, triangle of light on shadowed cheek, deep dramatic shadows, warm tungsten tone",
-    split: "Split lighting: face divided in half, one side fully lit, one in complete shadow, hard light, contrast ratio 8:1, dramatic graphic mood",
-    butterfly: "Butterfly/Paramount lighting: key light directly in front high above, butterfly shadow under nose, emphasizes cheekbones, Hollywood glamour",
-    rim: "Rim lighting: light sources behind subject, glowing outline around hair and jaw, face in shadow, dark background, cinematic mysterious mood",
-    chiaroscuro: "Chiaroscuro Caravaggio-inspired: extreme contrast, single harsh key light, no fill, deep black shadows, ratio 16:1, painterly theatrical",
-    golden: "Golden hour window light: warm low-angle sunlight 3200K, long warm shadows, skin warm golden-orange, natural intimate mood",
-    neon: "Neon duality: two opposing colored lights, magenta from one side, cyan from other, saturated color contrast, cyberpunk editorial aesthetic",
-    candle: "Practical candlelight only: 1800-2200K orange-amber, very low key deep shadows, grain, intimate timeless mood",
-    overcast: "Overcast flat light: overcast sky as giant soft box, virtually shadowless, 6500-7500K cool neutral, skin like silk, editorial quality",
-  },
-  camera: {
-    ricoh: "shot on Ricoh GR IIIx 40mm f/2.8, sharp center, natural vignetting, high contrast street rendering, grain ISO 800, documentary honest quality",
-    portra: "shot on Kodak Portra 400 35mm film, warm skin tones orange-pink shift, lifted blacks, soft highlight roll-off, fine grain, timeless analog",
-    ektar: "shot on Kodak Ektar 100, finest grain, highly saturated vivid colors, strong contrast, reds oranges vibrant, cinematic bold palette",
-    fuji: "shot on Fujifilm Superia 400, cooler shadows green-teal shift, moderate grain, neutral cool skin tones, candid everyday feeling",
-    contax: "shot on Contax T2 Zeiss Sonnar 38mm f/2.8, Zeiss micro-contrast three-dimensional separation, smooth bokeh, sophisticated luxurious film",
-    leica: "shot on Leica M Summilux 50mm f/1.4, three-dimensional pop, smooth bokeh, micro-contrast background separation, quiet luxurious German optics",
-    polaroid: "shot on Polaroid 600 instant camera, color shifts muted, heavy corner vignetting, soft focus, nostalgic dreamy analog character",
-    disposable: "shot on disposable 35mm camera, built-in flash frontal lighting, harsh shadows, lens distortion, washed out colors, heavy grain ISO 800",
-    canon: "shot on Canon AE-1 Canon FD 50mm f/1.8, warm golden rendering, smooth bokeh, flattering warm skin tones, organic human quality",
-  },
-  color: {
-    teal: "color grade Teal and Orange: shadows shifted teal/cyan, highlights skin tones warm orange-amber, high contrast, vibrant cinematic",
-    bleach: "color grade Bleach Bypass: highly desaturated 20-40%, extreme contrast crushed blacks blown highlights, silver metallic sheen, grain",
-    warm: "color grade Warm Analog: overall warm shift +400K, lifted blacks, highlights creamy yellow-white, warm inviting skin tones",
-    cold: "color grade Cold Scandinavian: cool shift -500K, shadows blue-grey, very low saturation near monochromatic, clean melancholic",
-    tokyo: "color grade Tokyo Neon: deep crushed blacks, neon reflections magenta cyan amber, high saturation, wet pavement, Blade Runner aesthetic",
-    matte: "color grade Matte Fade: blacks lifted to grey, low contrast, desaturated 30-40%, slight greenish-grey shadows, contemporary fashion",
-    moody: "color grade Moody Dark: very low key, shadows crushed black, single color accent in highlights, high contrast, thriller prestige drama",
-    vintage: "color grade Faded Vintage: heavy fade blacks become grey, warm yellow-orange cast, highlights blown creamy, found photograph feeling",
-  },
-  era: {
-    hollywood30: "1930s Hollywood glamour: black and white silver tone, butterfly lighting, halo backlight on hair, flawless matte skin, perfect waves, Greta Garbo",
-    noir40: "1940s Film Noir: high contrast B&W, hard single light sharp diagonal shadows, cigarette smoke, urban night, femme fatale detective mood",
-    london60: "1960s Swinging London Mod: graphic composition, Twiggy large defined eyes lower lashes drawn, pale skin, geometric Vidal Sassoon bob",
-    disco70: "1970s Studio 54 Disco: warm overexposed Kodak warmth, golden amber tones, glitter metallic fabrics, bronzed skin, hedonistic energy",
-    super90: "1990s Supermodel Calvin Klein: grain-heavy 35mm, natural light simple studio, minimal makeup, thin eyebrows, androgynous raw quality",
-    y2k: "Y2K 2000-2004: oversaturated early digital look, blown highlights, glossy skin, thin brows, frosted lips, holographic fabrics, maximalist",
-    tumblr: "2000s Tumblr: heavily faded washed-out colors, high exposure, pastel muted tones, soft focus, vintage texture, melancholic mood",
-    quiet: "Quiet Luxury 2023: neutral palette camel ivory taupe, no logos, cashmere linen implied, barely-there makeup, Loro Piana The Row aesthetic",
-    soviet: "Soviet Realism: desaturated monochromatic, strong frontal heroic lighting, direct gaze, simple plain clothing, propagandistic poster quality",
-    newwave: "French New Wave Godard 1960s: black and white high contrast, available natural light, intellectual detached expression, Parisian setting",
-    grunge: "1993 Grunge: heavy grain underexposed raw, desaturated or B&W, unflattering light, no makeup or smudged dark makeup, Seattle basement",
-    wkw: "Wong Kar-wai style: intentional motion blur, warm amber green color duality, shallow depth, melancholy longing, Hong Kong intimate framing",
-    newton: "Helmut Newton: high contrast, hard directional light, powerful dominant subject, luxury hotel poolside or white space, transgressive glamour",
+// ── MULTISELECT STATE ──
+const msState = {};
+Object.keys(MS_DATA).forEach(k => msState[k] = []);
+
+function buildDropdowns() {
+  Object.entries(MS_DATA).forEach(([key, opts]) => {
+    const dd = document.getElementById('dd_' + key);
+    if (!dd) return;
+    const searchId = 'ms_search_' + key;
+    dd.innerHTML = `<div class="ms-search"><input id="${searchId}" type="text" placeholder="Поиск..." onclick="event.stopPropagation()" oninput="filterOpts('${key}')"></div>`;
+    opts.forEach(opt => {
+      const d = document.createElement('div');
+      d.className = 'ms-opt';
+      d.dataset.val = opt;
+      d.innerHTML = `<div class="check"></div>${opt}`;
+      d.onclick = (e) => { e.stopPropagation(); toggleOpt(key, opt); };
+      dd.appendChild(d);
+    });
+  });
+}
+
+function filterOpts(key) {
+  const q = document.getElementById('ms_search_' + key).value.toLowerCase();
+  const dd = document.getElementById('dd_' + key);
+  dd.querySelectorAll('.ms-opt').forEach(el => {
+    el.style.display = el.dataset.val.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function msClick(e, key) {
+  e.stopPropagation();
+  const wrap = document.getElementById('ms_' + key);
+  const isOpen = wrap.classList.contains('open');
+  closeAllMs();
+  if (!isOpen) {
+    wrap.classList.add('open');
+    // Position dropdown via fixed coords to escape overflow:hidden parents
+    const dd = document.getElementById('dd_' + key);
+    if (dd) {
+      const rect = wrap.getBoundingClientRect();
+      dd.style.top = (rect.bottom + 4) + 'px';
+      dd.style.left = rect.left + 'px';
+      dd.style.width = rect.width + 'px';
+    }
+    const si = document.getElementById('ms_search_' + key);
+    if (si) si.focus();
   }
+}
+
+function closeAllMs() {
+  document.querySelectorAll('.ms-wrap.open').forEach(el => el.classList.remove('open'));
+}
+document.addEventListener('click', closeAllMs);
+
+function toggleOpt(key, val) {
+  const arr = msState[key];
+  const idx = arr.indexOf(val);
+  if (idx >= 0) arr.splice(idx, 1); else arr.push(val);
+  renderTags(key);
+  updateOptClasses(key);
+  updatePrompt();
+}
+
+function renderTags(key) {
+  const container = document.getElementById('tags_' + key);
+  if (!container) return;
+  const arr = msState[key];
+  if (arr.length === 0) {
+    container.innerHTML = `<span class="ms-ph">${getPlaceholder(key)}</span>`;
+  } else {
+    container.innerHTML = arr.map(v =>
+      `<span class="tag">${v}<span class="tag-x" onclick="event.stopPropagation();removeTag('${key}','${v.replace(/'/g,"\\'")}')">×</span></span>`
+    ).join('');
+  }
+}
+
+function getPlaceholder(key) {
+  const map = {форма_лица:'Выберите форму лица',цвет_глаз:'Выберите цвет глаз',форма_глаз:'Выберите форму глаз',взгляд:'Выберите взгляд',фокус:'Выберите фокус',эмоция:'Выберите эмоцию',микроэмоция:'Выберите микроэмоцию',улыбка:'Выберите улыбку',поворот_головы:'Выберите положение',движение_головы:'Выберите движение',мимика:'Выберите мимику',шея:'Выберите осанку',цвет_волос:'Выберите цвет волос',длина_волос:'Выберите длину',текстура_волос:'Выберите текстуру',укладка:'Выберите укладку',пробор:'Выберите пробор',женские_стрижки:'Выберите стрижку',мужские_стрижки:'Выберите стрижку',кадр:'Выберите кадр',объектив:'Выберите объектив',диафрагма:'Выберите диафрагму',выдержка:'Выберите выдержку',iso:'Выберите ISO',физика:'Выберите физику',сцена:'Выберите сцену',фон:'Выберите фон',погода:'Выберите погоду',композиция:'Выберите композицию',одежда:'Выберите одежду',аксессуары:'Выберите аксессуары'};
+  return map[key] || 'Выберите...';
+}
+
+function updateOptClasses(key) {
+  const dd = document.getElementById('dd_' + key);
+  if (!dd) return;
+  const arr = msState[key];
+  dd.querySelectorAll('.ms-opt').forEach(el => {
+    const sel = arr.includes(el.dataset.val);
+    el.classList.toggle('selected', sel);
+    el.querySelector('.check').textContent = sel ? '✓' : '';
+  });
+}
+
+function removeTag(key, val) {
+  const arr = msState[key];
+  const idx = arr.indexOf(val);
+  if (idx >= 0) arr.splice(idx, 1);
+  renderTags(key);
+  updateOptClasses(key);
+  updatePrompt();
+}
+
+// ── SECTION TOGGLE ──
+function toggleSec(hdr) {
+  const body = hdr.nextElementSibling;
+  const arrow = hdr.querySelector('.sec-arrow');
+  const isOpen = body.classList.toggle('open');
+  arrow.classList.toggle('open', isOpen);
+  hdr.classList.toggle('closed', !isOpen);
+}
+
+
+
+// ── PRESET TIPS ──
+const TIPS = {
+  light:{rembrandt:{n:'Рембрандт',d:'Один источник 45° сбоку — треугольник света на щеке в тени. Классика портрета: драматично, благородно.'},split:{n:'Раздельный свет',d:'Лицо пополам: одна сторона в свете, другая в полной тени. Контраст 8:1. Максимально жёстко и графично.'},butterfly:{n:'Бабочка / Paramount',d:'Источник прямо перед лицом и высоко — тень под носом бабочкой. Подчёркивает скулы. Голливуд 40-х.'},rim:{n:'Контровой / Rim',d:'Свет сзади — светящийся контур волос и лица. Лицо в тени. Мистика, кино.'},chiaroscuro:{n:'Кьяроскуро',d:'Как у Караваджо: один жёсткий луч, полная чернота вокруг. Контраст 16:1. Живописно и театрально.'},golden:{n:'Золотой час / Окно',d:'Тёплый солнечный свет через окно, 3200K. Длинные тени, золотистая кожа. Уютно и интимно.'},neon:{n:'Неоновый дуэт',d:'Два цветных источника: пурпурный и голубой. Цветовой раскол на лице. Киберпанк, editorial.'},candle:{n:'Только свечи',d:'Только пламя свечей: 1800K, янтарный, глубокие тени. Вне времени и очень интимно.'},overcast:{n:'Пасмурный плоский',d:'Пасмурное небо — гигантский софтбокс. Почти нет теней. Кожа выглядит как шёлк.'}},
+  camera:{ricoh:{n:'Ricoh GR',d:'Культовая стрит-камера. Резкий центр, виньетка, зерно ISO 800. Документально, честно.'},portra:{n:'Kodak Portra 400',d:'Легендарная портретная плёнка. Тёплые тона кожи, мягкие блики, кремовые цвета.'},ektar:{n:'Kodak Ektar 100',d:'Самая мелкозернистая плёнка. Насыщенные яркие цвета, высокий контраст, сочные красные.'},fuji:{n:'Fujifilm Superia',d:'Японская плёнка. Холодноватые тени с зелёным, нейтральная кожа. Повседневный кадр.'},contax:{n:'Contax T2',d:'Культовый компакт с Zeiss. Трёхмерное разделение объекта от фона, шёлковое боке.'},leica:{n:'Leica M',d:'Немецкая легенда. Объёмное 3D-разделение, точная резкость, богатые тени.'},polaroid:{n:'Polaroid 600',d:'Сдвинутые цвета, тяжёлая виньетка, мягкий фокус. Ностальгия и мечта.'},disposable:{n:'Одноразовая камера',d:'Вспышка в лоб, зерно, плоские цвета. Анти-гламур. Честная вечеринка.'},canon:{n:'Canon AE-1',d:'Самая любимая плёночная камера. Тёплый золотистый тон, мягкое боке, живое качество.'}},
+  color:{teal:{n:'Teal & Orange',d:'Голливудский блокбастер. Тени — бирюза, кожа — тёплый апельсин. Кинематографично.'},bleach:{n:'Отбеливающий обход',d:'Цвета почти смыты, экстремальный контраст, металлик на светах. Военное кино, Se7en.'},warm:{n:'Тёплый аналог',d:'Ностальгия по журналам 70-х. Тёплый сдвиг, поднятые чёрные, кремовые блики.'},cold:{n:'Холодный скандинав',d:'Северный минимализм. Холодный сдвиг, сине-серые тени, почти монохром.'},tokyo:{n:'Токийский неон',d:'Ночной дождь и неон. Глубокий чёрный, отражения пурпура и бирюзы. Blade Runner.'},matte:{n:'Матовый фейд',d:'Современный editorial. Чёрные подняты до серого, низкий контраст. Instagram-журнал.'},moody:{n:'Мрачный тёмный',d:'Кино-драма. Тёмный ключ, настоящий чёрный, один цветовой акцент. Сериальное напряжение.'},vintage:{n:'Выцветший винтаж',d:'Снимок с чердака: тяжёлый фейд, жёлтый каст, кремовые пересветы.'}},
+  era:{hollywood30:{n:'1930-е Голливуд',d:'Студийный портрет Золотого Голливуда. Серебристый свет, идеальные волны, шёлк. Грета Гарбо.'},noir40:{n:'1940-е Нуар',d:'Чёрно-белый нуар. Жёсткие тени, дым, ночной город. Роковая женщина или детектив.'},london60:{n:'1960-е Лондон',d:'Твигги, огромные глаза, минимализм. Геометрические стрижки Видала Сассуна. Молодость и бунт.'},disco70:{n:'1970-е Студия 54',d:'Тёплая плёнка, золото, блёстки, бронзовая кожа. Дискотечный гламур и гедонизм.'},super90:{n:'1990-е Супермодель',d:'Calvin Klein минимализм. Зернистая плёнка, тонкие брови. Kate Moss — без усилий.'},y2k:{n:'Y2K (2000–2004)',d:'Цифровой гиперреализм нулевых. Перенасыщение, глянец, блёстки. Paris Hilton.'},tumblr:{n:'2000-е Тумблер',d:'Выцветшие пастели, мягкий фокус, меланхолия. Винтаж, природа, искренняя молодость.'},quiet:{n:'Тихая роскошь',d:'Loro Piana, The Row. Кашемир, беж, лён. Ни одного лого. Дорого потому что не кричит.'},soviet:{n:'Советский реализм',d:'Героический портрет: десатурация, прямой взгляд, простая одежда. Достоинство и сила.'},newwave:{n:'Французская новая волна',d:'Годар, Трюффо. Ч/б, доступный свет, интеллектуальная отстранённость. Анна Карина, Париж.'},grunge:{n:'Гранж (1993)',d:'Сиэтл, подвал, зерно. Тёмная плёнка, вспышка. Кобейн, усталость, фланель.'},wkw:{n:'Вонг Кар-Вай',d:'Motion blur, янтарный и зелёный, мокрые поверхности. Тоска и время. «Любовное настроение».'},newton:{n:'Хельмут Ньютон',d:'Власть, доминирование, архитектурное тело. Жёсткий контраст, бассейн или белый кабинет.'}}
 };
 
-// Update tooltip on select change
-document.getElementById('preset_light').addEventListener('change', function() {
-  const v = this.value;
-  document.getElementById('light-name').textContent = v ? PRESET_DESCS.light[v].name : '—';
-  document.getElementById('light-desc').textContent = v ? PRESET_DESCS.light[v].desc : 'Выберите пресет';
-  updatePrompt();
-});
-document.getElementById('preset_camera').addEventListener('change', function() {
-  const v = this.value;
-  document.getElementById('camera-name').textContent = v ? PRESET_DESCS.camera[v].name : '—';
-  document.getElementById('camera-desc').textContent = v ? PRESET_DESCS.camera[v].desc : 'Выберите пресет';
-  updatePrompt();
-});
-document.getElementById('preset_color').addEventListener('change', function() {
-  const v = this.value;
-  document.getElementById('color-name').textContent = v ? PRESET_DESCS.color[v].name : '—';
-  document.getElementById('color-desc').textContent = v ? PRESET_DESCS.color[v].desc : 'Выберите пресет';
-  updatePrompt();
-});
-document.getElementById('preset_era').addEventListener('change', function() {
-  const v = this.value;
-  document.getElementById('era-name').textContent = v ? PRESET_DESCS.era[v].name : '—';
-  document.getElementById('era-desc').textContent = v ? PRESET_DESCS.era[v].desc : 'Выберите пресет';
-  updatePrompt();
+function updateTip(cat) {
+  const idMap = {light:'p_light',camera:'p_camera',color:'p_color',era:'p_era'};
+  const val = document.getElementById(idMap[cat]).value;
+  const nameEl = document.getElementById(cat+'_tip_name');
+  const descEl = document.getElementById(cat+'_tip_desc');
+  if (!nameEl) return;
+  if (val && TIPS[cat][val]) {
+    nameEl.textContent = TIPS[cat][val].n;
+    descEl.textContent = TIPS[cat][val].d;
+  } else {
+    nameEl.textContent = '';
+    descEl.textContent = '';
+  }
+}
+
+function toggleTip(id, btnEl) {
+  const el = document.getElementById(id);
+  const wasShown = el.classList.contains('show');
+  document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
+  if (!wasShown && el.querySelector('.pc-tip-name').textContent) {
+    // Position via fixed coords
+    const rect = btnEl.closest('.pc-row').getBoundingClientRect();
+    el.style.top = (rect.bottom + 6) + 'px';
+    // Keep within viewport
+    const left = rect.left;
+    const tipW = 220;
+    el.style.left = Math.min(left, window.innerWidth - tipW - 16) + 'px';
+    el.classList.add('show');
+  }
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.pc')) document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
 });
 
-function g(id) { return document.getElementById(id)?.value || ''; }
+// ── GET VALUE ──
+function g(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function ms(key) { return msState[key] || []; }
+function msStr(key) { return ms(key).join(', '); }
 
+// ── BUILD PROMPT ──
 function updatePrompt() {
-  const пол = g('пол'), возраст = g('возраст'), этно = g('этнотип');
-  const тело = g('телосложение'), рост = g('рост');
-  const форма = g('форма_лица'), скулы = g('скулы');
-  const тон = g('тон_кожи'), текс = g('текстура_кожи');
-  const цгл = g('цвет_глаз'), фгл = g('форма_глаз'), взгл = g('взгляд');
-  const эмо = g('эмоция'), ул = g('улыбка');
-  const цвол = g('цвет_волос'), двол = g('длина_волос'), твол = g('текстура_волос'), укл = g('укладка');
-  const кадр = g('кадр'), объ = g('объектив'), диаф = g('диафрагма');
-  const фон = g('фон'), стиль = g('стиль');
-
-  const pl = g('preset_light'), pc = g('preset_camera'), pco = g('preset_color'), pe = g('preset_era');
-
   const lines = [];
-  lines.push("ФОТОГРАФИЧЕСКОЕ ЗАДАНИЕ ДЛЯ ГЕНЕРАЦИИ РЕАЛИСТИЧНОГО DSLR-ПОРТРЕТА");
-  lines.push("────────────────────────────────────────");
-  lines.push("");
+  const add = (title, val) => { if (val && val.trim() && val !== '— выберите —') lines.push(title + ': ' + val); };
 
-  if (пол||возраст||этно||тело||рост) {
-    lines.push("ПЕРСОНАЖ");
-    if (пол) lines.push("Пол: " + пол);
-    if (возраст) lines.push("Возраст: " + возраст + " лет");
-    if (этно) lines.push("Этнотип: " + этно);
-    if (тело) lines.push("Телосложение: " + тело);
-    if (рост) lines.push("Рост: " + рост);
-    lines.push("");
+  lines.push('ФОТОГРАФИЧЕСКОЕ ЗАДАНИЕ ДЛЯ ГЕНЕРАЦИИ РЕАЛИСТИЧНОГО DSLR-ПОРТРЕТА');
+  lines.push('────────────────────────────────────────');
+  lines.push('');
+
+  // Персонаж
+  const hasChar = g('пол')||g('возраст')||g('этнотип')||g('телосложение')||g('рост')||g('осанка');
+  if (hasChar) {
+    lines.push('ПЕРСОНАЖ');
+    add('Пол', g('пол')); add('Возраст', g('возраст') ? g('возраст')+' лет' : '');
+    add('Этнотип', g('этнотип')); add('Телосложение', g('телосложение'));
+    add('Рост', g('рост')); add('Осанка', g('осанка'));
+    lines.push('');
   }
 
-  if (форма||скулы||тон||текс) {
-    lines.push("ЛИЦО И КОЖА");
-    if (форма) lines.push("Форма лица: " + форма);
-    if (скулы) lines.push("Скулы: " + скулы);
-    if (тон) lines.push("Тон кожи: " + тон);
-    if (текс) lines.push("Текстура кожи: " + текс);
-    lines.push("");
+  // Лицо
+  const hasFace = msStr('форма_лица')||g('скулы')||g('челюсть')||g('подбородок');
+  if (hasFace) {
+    lines.push('ЛИЦО — СТРУКТУРА');
+    add('Форма лица', msStr('форма_лица')); add('Скулы', g('скулы'));
+    add('Челюсть', g('челюсть')); add('Подбородок', g('подбородок'));
+    lines.push('');
   }
 
-  if (цгл||фгл||взгл||эмо||ул) {
-    lines.push("ГЛАЗА И ВЫРАЖЕНИЕ");
-    if (цгл) lines.push("Цвет глаз: " + цгл);
-    if (фгл) lines.push("Форма глаз: " + фгл);
-    if (взгл) lines.push("Взгляд: " + взгл);
-    if (эмо) lines.push("Эмоция: " + эмо);
-    if (ул) lines.push("Улыбка: " + ул);
-    lines.push("");
+  // Кожа
+  const hasSkin = g('тон_кожи')||g('качество_кожи')||g('микро')||g('свет_кожи')||g('возраст_кожи')||g('несоверш');
+  if (hasSkin) {
+    lines.push('КОЖА');
+    add('Тон кожи', g('тон_кожи')); add('Качество', g('качество_кожи'));
+    add('Микротекстура', g('микро')); add('Свет кожи', g('свет_кожи'));
+    add('Возраст кожи', g('возраст_кожи')); add('Несовершенства', g('несоверш'));
+    lines.push('');
   }
 
-  if (цвол||двол||твол||укл) {
-    lines.push("ВОЛОСЫ");
-    const hair = [цвол, двол, твол, укл].filter(Boolean).join(", ");
-    if (hair) lines.push(hair);
-    lines.push("");
+  // Глаза
+  const hasEyes = msStr('цвет_глаз')||msStr('форма_глаз')||msStr('взгляд')||msStr('фокус');
+  if (hasEyes) {
+    lines.push('ГЛАЗА');
+    add('Цвет', msStr('цвет_глаз')); add('Форма', msStr('форма_глаз'));
+    add('Взгляд', msStr('взгляд')); add('Фокус', msStr('фокус'));
+    lines.push('');
   }
 
-  if (кадр||объ||диаф||фон||стиль) {
-    lines.push("КАМЕРА И СЦЕНА");
-    if (стиль) lines.push("Стиль: " + стиль);
-    if (кадр) lines.push("Кадр: " + кадр);
-    if (объ) lines.push("Объектив: " + объ);
-    if (диаф) lines.push("Диафрагма: " + диаф);
-    if (фон) lines.push("Фон: " + фон);
-    lines.push("");
+  // Брови нос губы
+  const hasBNG = g('брови')||g('нос')||g('губы');
+  if (hasBNG) {
+    lines.push('БРОВИ / НОС / ГУБЫ');
+    add('Брови', g('брови')); add('Нос', g('нос')); add('Губы', g('губы'));
+    lines.push('');
   }
 
-  const presets = [];
-  if (pl) presets.push("[СВЕТ — " + PRESET_DESCS.light[pl].name + "]: " + PRESET_EN.light[pl]);
-  if (pc) presets.push("[КАМЕРА — " + PRESET_DESCS.camera[pc].name + "]: " + PRESET_EN.camera[pc]);
-  if (pco) presets.push("[ЦВЕТ — " + PRESET_DESCS.color[pco].name + "]: " + PRESET_EN.color[pco]);
-  if (pe) presets.push("[ЭПОХА — " + PRESET_DESCS.era[pe].name + "]: " + PRESET_EN.era[pe]);
-
-  if (presets.length) {
-    lines.push("ПРЕСЕТЫ");
-    presets.forEach(p => lines.push(p));
-    lines.push("");
+  // Эмоции
+  const hasEmo = msStr('эмоция')||msStr('микроэмоция')||msStr('улыбка');
+  if (hasEmo) {
+    lines.push('ЭМОЦИЯ И ВЫРАЖЕНИЕ');
+    add('Эмоция', msStr('эмоция')); add('Микроэмоция', msStr('микроэмоция'));
+    add('Улыбка', msStr('улыбка'));
+    lines.push('');
   }
 
-  lines.push("────────────────────────────────────────");
-  lines.push("Фотореализм DSLR-уровня, естественная кожа, физически корректный свет, 8K, no CGI.");
-  lines.push("");
-  lines.push("NEGATIVE: plastic skin, CGI, doll face, perfect symmetry, beauty filter, airbrushed, fake, 3D render");
+  // Голова
+  const hasHead = msStr('поворот_головы')||msStr('движение_головы')||msStr('мимика')||msStr('шея');
+  if (hasHead) {
+    lines.push('ГОЛОВА И ДВИЖЕНИЕ');
+    add('Положение', msStr('поворот_головы')); add('Движение', msStr('движение_головы'));
+    add('Мимика', msStr('мимика')); add('Шея', msStr('шея'));
+    lines.push('');
+  }
 
-  const result = lines.join("\n");
-  document.getElementById('prompt-output').textContent =
-    result.trim() === "ФОТОГРАФИЧЕСКОЕ ЗАДАНИЕ ДЛЯ ГЕНЕРАЦИИ РЕАЛИСТИЧНОГО DSLR-ПОРТРЕТА\n────────────────────────────────────────\n\n────────────────────────────────────────\nФотореализм DSLR-уровня, естественная кожа, физически корректный свет, 8K, no CGI.\n\nNEGATIVE: plastic skin, CGI, doll face, perfect symmetry, beauty filter, airbrushed, fake, 3D render"
-    ? "Выберите параметры выше — промпт сформируется автоматически..."
-    : result;
+  // Волосы
+  const hairAll = [msStr('цвет_волос'),msStr('длина_волос'),msStr('текстура_волос'),msStr('укладка'),msStr('пробор'),msStr('женские_стрижки'),msStr('мужские_стрижки'),g('макияж'),g('борода')].filter(Boolean);
+  if (hairAll.length) {
+    lines.push('ВОЛОСЫ');
+    add('Цвет', msStr('цвет_волос')); add('Длина', msStr('длина_волос'));
+    add('Текстура', msStr('текстура_волос')); add('Укладка', msStr('укладка'));
+    add('Пробор', msStr('пробор')); add('Женские стрижки', msStr('женские_стрижки'));
+    add('Мужские стрижки', msStr('мужские_стрижки')); add('Макияж', g('макияж'));
+    add('Растительность', g('борода'));
+    lines.push('');
+  }
 
-  // Mini prompt
-  const age = возраст || '';
-  const eth = этно ? этно.charAt(0).toUpperCase() + этно.slice(1) : '';
-  const bld = тело ? тело.charAt(0).toUpperCase() + тело.slice(1) : '';
-  const hair = цвол ? цвол.charAt(0).toUpperCase() + цвол.slice(1) : '';
-  const eyes = цгл ? цгл.charAt(0).toUpperCase() + цгл.slice(1) : '';
-  const presetNames = [pl,pc,pco,pe].filter(Boolean).map((v,i) => {
-    const cats = [PRESET_DESCS.light, PRESET_DESCS.camera, PRESET_DESCS.color, PRESET_DESCS.era];
-    const vals = [pl,pc,pco,pe];
-    return cats[i][vals[i]]?.name || '';
-  }).filter(Boolean);
-  const lightLabel = presetNames[0] || стиль || '';
-  const lensLabel = объ || '';
+  // Одежда
+  const hasOut = msStr('одежда')||msStr('аксессуары')||g('одежда_текст');
+  if (hasOut) {
+    lines.push('ОДЕЖДА И АКСЕССУАРЫ');
+    add('Одежда', msStr('одежда')); add('Аксессуары', msStr('аксессуары'));
+    if (g('одежда_текст')) lines.push('Свободный ввод: ' + g('одежда_текст'));
+    lines.push('');
+  }
 
-  const p1 = [age, eth, bld].filter(Boolean).join(' / ');
+  // Камера
+  const hasCam = msStr('кадр')||msStr('объектив')||msStr('диафрагма')||msStr('выдержка')||msStr('iso')||msStr('физика')||g('боке')||g('оптика');
+  if (hasCam) {
+    lines.push('КАМЕРА И СЪЁМКА');
+    add('Кадр', msStr('кадр')); add('Объектив', msStr('объектив'));
+    add('Диафрагма', msStr('диафрагма')); add('Выдержка', msStr('выдержка'));
+    add('ISO', msStr('iso')); add('Физика изображения', msStr('физика'));
+    add('Боке', g('боке')); add('Оптика', g('оптика'));
+    lines.push('');
+  }
+
+  // Сцена
+  const hasScene = msStr('сцена')||msStr('фон')||msStr('погода')||g('локация')||msStr('композиция');
+  if (hasScene) {
+    lines.push('СЦЕНА И ОКРУЖЕНИЕ');
+    add('Сцена', msStr('сцена')); add('Фон', msStr('фон'));
+    add('Погода', msStr('погода'));
+    if (g('локация')) lines.push('Локация: ' + g('локация'));
+    add('Композиция', msStr('композиция'));
+    lines.push('');
+  }
+
+  // Стиль
+  const hasStyle = g('стиль')||g('цель')||g('качество');
+  if (hasStyle) {
+    lines.push('СТИЛЬ И ЦЕЛЬ');
+    add('Стиль', g('стиль')); add('Цель', g('цель')); add('Качество', g('качество'));
+    lines.push('');
+  }
+
+  // Пресеты
+  const pl = g('p_light'), pc = g('p_camera'), pco = g('p_color'), pe = g('p_era');
+  const presetLines = [];
+  if (pl && TIPS.light[pl]) presetLines.push('[СВЕТ — '+TIPS.light[pl].n+']: '+TIPS.light[pl].d);
+  if (pc && TIPS.camera[pc]) presetLines.push('[КАМЕРА — '+TIPS.camera[pc].n+']: '+TIPS.camera[pc].d);
+  if (pco && TIPS.color[pco]) presetLines.push('[ЦВЕТ — '+TIPS.color[pco].n+']: '+TIPS.color[pco].d);
+  if (pe && TIPS.era[pe]) presetLines.push('[ЭПОХА — '+TIPS.era[pe].n+']: '+TIPS.era[pe].d);
+  if (presetLines.length) { lines.push('ПРЕСЕТЫ'); presetLines.forEach(p => lines.push(p)); lines.push(''); }
+
+  lines.push('────────────────────────────────────────');
+  lines.push('Фотореализм DSLR-уровня, естественная кожа, физически корректный свет, 8K, no CGI.');
+
+  const neg = g('негатив');
+  if (neg) { lines.push(''); lines.push('NEGATIVE: ' + neg); }
+
+  const result = lines.join('\n');
+  const isEmpty = !hasChar && !hasFace && !hasSkin && !hasEyes && !hasBNG && !hasEmo && !hasHead && !hairAll.length && !hasOut && !hasCam && !hasScene && !hasStyle && !presetLines.length;
+  document.getElementById('out_full').textContent = isEmpty ? 'Выберите параметры выше — промпт сформируется автоматически...' : result;
+
+  buildMini(pl, pc, pco, pe);
+}
+
+function buildMini(pl, pc, pco, pe) {
+  const пол = g('пол'), возраст = g('возраст'), этно = g('этнотип');
+  const тело = g('телосложение');
+  const hair = msState.цвет_волос[0] || '';
+  const eyes = msState.цвет_глаз[0] || '';
+  const lightName = pl && TIPS.light[pl] ? TIPS.light[pl].n : '';
+  const camName = pc && TIPS.camera[pc] ? TIPS.camera[pc].n : '';
+  const colorName = pco && TIPS.color[pco] ? TIPS.color[pco].n : '';
+  const eraName = pe && TIPS.era[pe] ? TIPS.era[pe].n : '';
+  const lens = msState.объектив[0] || '';
+  const эмо = msState.эмоция[0] || '';
+
+  const p1 = [возраст, этно, тело].filter(Boolean).join(' / ');
   const p2 = [hair, eyes].filter(Boolean).join(' · ');
-  const p3 = [lightLabel, lensLabel].filter(Boolean).join(' · ');
+  const p3 = [lightName, camName, lens].filter(Boolean).join(' · ');
 
-  const genderWord = пол === 'мужской' ? 'HE IS' : 'SHE IS';
-  const posterParts = [eth.toUpperCase(), bld.toUpperCase(), age, hair.toUpperCase()].filter(Boolean);
-  const poster1 = posterParts.length ? genderWord + ': ' + posterParts.join(' · ') : '';
-  const poster2 = [lensLabel, lightLabel].filter(Boolean).length ? 'SHOT ON: ' + [lensLabel, lightLabel].filter(Boolean).join(' · ') : '';
-  const moodMap = {спокойное:'Quiet', уверенное:'Confident', загадочное:'Mysterious', дружелюбное:'Warm', премиальное:'Premium', дерзкое:'Bold'};
-  const poster3 = эмо ? 'MOOD: ' + (moodMap[эмо] || эмо) : '';
+  const gw = пол === 'мужской' ? 'HE IS' : 'SHE IS';
+  const pp = [этно?.toUpperCase(), тело?.toUpperCase(), возраст, hair?.toUpperCase()].filter(Boolean).join(' · ');
+  const poster1 = pp ? gw + ': ' + pp : '';
+  const shotParts = [lens, lightName, camName].filter(Boolean);
+  const poster2 = shotParts.length ? 'SHOT ON: ' + shotParts.join(' · ') : '';
+  const moodMap = {'спокойное выражение лица':'Quiet','уверенное выражение':'Confident','загадочное выражение':'Mysterious','дружелюбное выражение':'Warm','премиальное выражение лица':'Premium','дерзкое выражение':'Bold','дорогой спокойный вайб':'Quiet Luxury'};
+  const mood = moodMap[эмо] || (eraName ? eraName : '') || (colorName ? colorName : '');
+  const poster3 = mood ? 'MOOD: ' + mood : '';
 
-  const tags = [hair, eyes, eth, lightLabel, lensLabel].filter(Boolean)
-    .map(t => '#' + t.toLowerCase().replace(/\s+/g,'').replace(/[\/·]/g,''))
-    .concat(['#portrait','#aiportrait','#photorealistic']);
+  const tagSrc = [hair, eyes, этно, lightName, camName, colorName, eraName, lens].filter(Boolean);
+  const tags = tagSrc.map(t => '#' + t.toLowerCase().replace(/\s+/g,'').replace(/[\/·']/g,'')).concat(['#portrait','#aiportrait','#photorealistic']).join(' ');
 
-  const miniLines = [];
+  const mini = [];
   if (p1||p2||p3) {
-    miniLines.push('— ПАСПОРТ —');
-    if (p1) miniLines.push(p1);
-    if (p2) miniLines.push(p2);
-    if (p3) miniLines.push(p3);
-    miniLines.push('');
+    mini.push('— ПАСПОРТ —');
+    if (p1) mini.push(p1); if (p2) mini.push(p2); if (p3) mini.push(p3);
+    mini.push('');
   }
   if (poster1||poster2||poster3) {
-    miniLines.push('— КИНОПОСТЕР —');
-    if (poster1) miniLines.push(poster1);
-    if (poster2) miniLines.push(poster2);
-    if (poster3) miniLines.push(poster3);
-    miniLines.push('');
+    mini.push('— КИНОПОСТЕР —');
+    if (poster1) mini.push(poster1); if (poster2) mini.push(poster2); if (poster3) mini.push(poster3);
+    mini.push('');
   }
-  miniLines.push('— ХЭШТЕГИ —');
-  miniLines.push(tags.join(' '));
+  mini.push('— ХЭШТЕГИ —');
+  mini.push(tags);
 
-  document.getElementById('mini-output').textContent = miniLines.join('\n');
+  document.getElementById('out_mini').textContent = mini.join('\n');
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+// ── TABS ──
+function switchOut(tab) {
+  document.querySelectorAll('.out-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.out-pane').forEach(p => p.classList.remove('active'));
   if (tab === 'full') {
-    document.querySelectorAll('.tab')[0].classList.add('active');
-    document.getElementById('tab-full').classList.add('active');
+    document.querySelectorAll('.out-tab')[0].classList.add('active');
+    document.getElementById('op_full').classList.add('active');
   } else {
-    document.querySelectorAll('.tab')[1].classList.add('active');
-    document.getElementById('tab-mini').classList.add('active');
+    document.querySelectorAll('.out-tab')[1].classList.add('active');
+    document.getElementById('op_mini').classList.add('active');
   }
 }
 
-function copyPrompt() {
-  navigator.clipboard.writeText(document.getElementById('prompt-output').textContent);
-}
-function copyMini() {
-  navigator.clipboard.writeText(document.getElementById('mini-output').textContent);
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target; btn.textContent = '✓ Скопировано!';
+    setTimeout(() => btn.textContent = 'Копировать', 2000);
+  });
 }
 
+// ── RESET ──
 function resetAll() {
   document.querySelectorAll('select').forEach(s => s.value = '');
-  ['light-name','camera-name','color-name','era-name'].forEach(id => {
-    document.getElementById(id).textContent = '—';
+  document.querySelectorAll('textarea').forEach(t => {
+    if (t.id === 'негатив') t.value = 'plastic skin, CGI, 3D render, doll face, mannequin, perfect symmetry, beauty filter, over-smoothing, waxy skin, cartoon, anime, artificial eyes, unnatural proportions, generation artifacts, airbrushed, fake';
+    else t.value = '';
   });
-  ['light-desc','camera-desc','color-desc','era-desc'].forEach(id => {
-    document.getElementById(id).textContent = 'Выберите пресет';
-  });
+  Object.keys(msState).forEach(k => { msState[k] = []; renderTags(k); updateOptClasses(k); });
+  document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
+  ['light','camera','color','era'].forEach(c => { updateTip(c); });
   updatePrompt();
 }
 
-const RANDOMS = {
-  пол: ['женский','мужской'],
-  возраст: ['25','28','30','35','40','45'],
-  этнотип: ['средиземноморская','славянская','скандинавская','латиноамериканская'],
-  телосложение: ['стройное','спортивное','среднее','пышное'],
-  рост: ['средний','выше среднего','высокий'],
-  форма_лица: ['овальное','сердцевидное','скульптурное','квадратное'],
-  скулы: ['выраженные','высокие','мягкие','скульптурные'],
-  тон_кожи: ['оливковая','светлая','загорелая','средняя'],
-  текстура_кожи: ['идеально чистая','естественная','лёгкие веснушки'],
-  цвет_глаз: ['ореховые','зелёные','карие','голубые','янтарные'],
-  форма_глаз: ['миндалевидные','глубоко посаженные','крупные'],
-  взгляд: ['слегка мимо','прямо в камеру','загадочный','через плечо'],
-  эмоция: ['спокойное','загадочное','уверенное','премиальное'],
-  улыбка: ['без улыбки','лёгкая закрытая','уголками губ'],
-  цвет_волос: ['платиновый блонд','каштановые','тёмно-русые','чёрные','рыжие'],
-  длина_волос: ['до плеч','ниже плеч','длинные','очень длинные'],
-  текстура_волос: ['объёмные волны','мягкие волны','прямые'],
-  укладка: ['небрежная luxury','естественная','объём у корней'],
-  кадр: ['портрет по плечи','поясной','полный рост'],
-  объектив: ['85mm f/1.4','50mm','105mm'],
-  диафрагма: ['f/1.8','f/2.8','f/1.4'],
-  фон: ['размытый интерьер','luxury интерьер','городская улица'],
-  стиль: ['editorial','lifestyle','бьюти'],
+// ── RANDOM ──
+const RAND = {
+  пол:['женский','мужской'],
+  возраст:['25','28','30','35','40','45'],
+  этнотип:['средиземноморская','восточноевропейская / славянская','скандинавская','латиноамериканская','ближневосточная'],
+  телосложение:['стройное','спортивное','среднее','пышное','худощавое'],
+  рост:['средний (164–169)','выше среднего (170–175)','высокий (176–181)'],
+  осанка:['расслабленная','уверенная','элегантная'],
+  скулы:['выраженные','высокие','мягкие','скульптурные'],
+  челюсть:['мягкая','чёткая','узкая'],
+  подбородок:['аккуратный','мягкий','сужающийся'],
+  тон_кожи:['оливковая','светлая нейтральная','загорелая','средиземноморская'],
+  качество_кожи:['идеально чистая','естественная (поры видны)','лёгкие веснушки'],
+  брови:['аккуратные','выразительные','с мягкой аркой','густые'],
+  нос:['аккуратный','прямой','мягкий натуральный'],
+  губы:['мягко очерченные','естественно полные','средней полноты'],
+  макияж:['натуральный минимальный','лёгкий естественный','акцент на глаза','без макияжа'],
+  стиль:['editorial / журнальный','lifestyle','beauty-съёмка'],
+  цель:['портрет','соцсети','реклама'],
+  качество:['DSLR','ультрареализм','8K'],
+  боке:['мягкое'],
+};
+const RAND_MS = {
+  форма_лица:[['овальное лицо'],['сердцевидное лицо'],['скульптурное лицо'],['квадратное лицо']],
+  цвет_глаз:[['ореховые'],['зелёные'],['карие'],['голубые'],['янтарные'],['серые']],
+  форма_глаз:[['миндалевидные'],['глубоко посаженные'],['крупные']],
+  взгляд:[['прямо в камеру'],['слегка мимо камеры'],['в сторону'],['через плечо']],
+  эмоция:[['спокойное выражение лица'],['загадочное выражение'],['уверенное выражение'],['премиальное выражение лица']],
+  улыбка:[['без улыбки'],['лёгкая закрытая улыбка'],['улыбка уголками губ']],
+  поворот_головы:[['анфас'],['лёгкий поворот головы'],['подбородок чуть приподнят'],['лёгкий наклон головы']],
+  цвет_волос:[['платиновый блонд'],['каштановые'],['тёмно-русые'],['натуральные чёрные'],['рыжие'],['тёплый блонд']],
+  длина_волос:[['до плеч'],['ниже плеч'],['длинные'],['очень длинные']],
+  текстура_волос:[['объёмные волны'],['мягкие волны'],['прямые'],['лёгкие локоны']],
+  укладка:[['небрежная люксовая'],['естественная укладка'],['объём у корней'],['ветер в волосах']],
+  пробор:[['центральный пробор'],['боковой пробор']],
+  кадр:[['портрет по плечи'],['поясной портрет'],['полный рост'],['лайфстайл кадр']],
+  объектив:[['85mm портретный'],['50mm естественный'],['105mm beauty compression']],
+  диафрагма:[['f/1.8'],['f/2.8'],['f/1.4']],
+  физика:[['DSLR реализм','натуральная резкость'],['оптическое боке','DSLR реализм']],
+  сцена:[['размытый фон (bokeh)'],['кафе интерьер'],['городская улица'],['минималистичный интерьер']],
+  фон:[['мягко размытый фон'],['сильное боке'],['реалистичная глубина резкости']],
+};
+const RAND_PRESETS = {
+  light:['rembrandt','split','butterfly','rim','chiaroscuro','golden','neon','candle','overcast',''],
+  camera:['ricoh','portra','ektar','fuji','contax','leica','polaroid','disposable','canon',''],
+  color:['teal','bleach','warm','cold','tokyo','matte','moody','vintage',''],
+  era:['hollywood30','noir40','london60','disco70','super90','y2k','tumblr','quiet','soviet','newwave','grunge','wkw','newton',''],
 };
 
+function rnd(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
 function generateRandom() {
-  Object.entries(RANDOMS).forEach(([id, opts]) => {
-    const el = document.getElementById(id);
-    if (el) el.value = opts[Math.floor(Math.random() * opts.length)];
+  // simple selects
+  Object.entries(RAND).forEach(([id, opts]) => {
+    const el = document.getElementById(id); if (el) el.value = rnd(opts);
+  });
+  // multiselects
+  Object.entries(RAND_MS).forEach(([key, opts]) => {
+    msState[key] = [...rnd(opts)];
+    renderTags(key); updateOptClasses(key);
+  });
+  // presets
+  ['light','camera','color','era'].forEach(cat => {
+    const val = rnd(RAND_PRESETS[cat]);
+    const idMap = {light:'p_light',camera:'p_camera',color:'p_color',era:'p_era'};
+    document.getElementById(idMap[cat]).value = val;
+    updateTip(cat);
   });
   updatePrompt();
 }
 
+// ── INIT ──
+buildDropdowns();
 updatePrompt();
+// Mark all closed headers
+document.querySelectorAll('.sec-hdr').forEach(hdr => {
+  const body = hdr.nextElementSibling;
+  if (body && !body.classList.contains('open')) hdr.classList.add('closed');
+});
+// Reposition open dropdowns on scroll
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.ms-wrap.open').forEach(wrap => {
+    const key = wrap.id.replace('ms_','');
+    const dd = document.getElementById('dd_' + key);
+    if (dd) {
+      const rect = wrap.getBoundingClientRect();
+      dd.style.top = (rect.bottom + 4) + 'px';
+      dd.style.left = rect.left + 'px';
+    }
+  });
+}, true);
 </script>
 </body>
 </html>
