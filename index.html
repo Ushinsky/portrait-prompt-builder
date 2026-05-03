@@ -4,81 +4,149 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Конструктор DSLR-промптов</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F0EDE8;--bg2:#E8E4DE;--bg3:#DEDAD3;--surface:#FAFAF8;--taupe:#4A4540;--taupe-l:#7A7268;--taupe-d:#2A2420;--border:#D4CFC8;--border2:#C4BFB8;--text:#1C1A18;--text2:#5A5650;--text3:#9A9590;}
+:root{
+  --bg:#F0EDE8; --bg2:#E8E4DE; --bg3:#DEDAD3;
+  --surface:#FAFAF8; --taupe:#4A4540; --taupe-l:#7A7268;
+  --taupe-d:#2A2420; --border:#D4CFC8; --border2:#C4BFB8;
+  --text:#1C1A18; --text2:#5A5650; --text3:#9A9590;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);min-height:100vh;}
 
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 32px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+/* HEADER */
+header{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 32px;height:52px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;
+}
 .logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;letter-spacing:.06em;color:var(--taupe-d);}
 .hbtns{display:flex;gap:8px;}
 
+/* BUTTONS */
 .btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 18px;border-radius:20px;cursor:pointer;transition:all .15s;border:none;}
 .btn-p{background:var(--taupe);color:#F5F2ED;}
 .btn-p:hover{background:var(--taupe-d);}
 .btn-g{background:transparent;border:1px solid var(--border2);color:var(--taupe);}
 .btn-g:hover{background:var(--bg3);}
 
-.container{max-width:860px;margin:0 auto;padding:24px 20px 140px;}
+/* CONTAINER */
+.container{max-width:860px;margin:0 auto;padding:24px 20px 160px;}
 
-.page-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--taupe-d);letter-spacing:.03em;margin-bottom:4px;padding:20px 0 16px;}
-.page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
-
-.section{margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
-.sec-hdr{padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-radius:12px 12px 0 0;}
-.sec-hdr.closed{border-bottom:none;border-radius:12px;}
+/* SECTION — key: overflow:hidden stays, dropdowns use position:fixed to escape */
+.section{
+  margin-bottom:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;  /* keeps rounded corners */
+}
+.sec-hdr{
+  padding:12px 20px;background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;user-select:none;
+}
+.sec-hdr.no-border{border-bottom:none;}
 .sec-hdr:hover{background:var(--bg3);}
-.sec-num{width:24px;height:24px;border-radius:50%;background:var(--taupe);color:#F5F2ED;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sec-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--taupe);color:#F5F2ED;
+  font-size:11px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
 .sec-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--taupe-d);flex:1;}
-.sec-arrow{font-size:12px;color:var(--text3);transition:transform .2s;}
+.sec-arrow{font-size:11px;color:var(--text3);transition:transform .2s;}
 .sec-arrow.open{transform:rotate(180deg);}
 .sec-body{padding:18px 20px;display:none;}
 .sec-body.open{display:block;}
 
+/* GRIDS */
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 .fg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
 .field{margin-bottom:14px;}
 .field:last-child{margin-bottom:0;}
 .fl{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.mt{margin-top:14px;}
+.full{grid-column:1/-1;}
 
-select,textarea,input[type=text]{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none;}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+/* FORM ELEMENTS */
+select,textarea{
+  width:100%;font-family:'DM Sans',sans-serif;font-size:13px;
+  color:var(--text);background:var(--bg);
+  border:1px solid var(--border2);border-radius:7px;
+  padding:8px 11px;outline:none;transition:border-color .15s;
+  appearance:none;-webkit-appearance:none;
+}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
+}
 select:focus,textarea:focus{border-color:var(--taupe);}
 textarea{resize:vertical;min-height:70px;line-height:1.6;}
 
-/* multiselect */
-.ms-wrap{border:1px solid var(--border2);border-radius:7px;background:var(--bg);min-height:38px;padding:5px 8px;cursor:pointer;transition:border-color .15s;position:relative;}
-.ms-wrap:focus-within,.ms-wrap.open{border-color:var(--taupe);}
-.ms-tags{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+/* MULTISELECT */
+.ms-wrap{
+  border:1px solid var(--border2);border-radius:7px;background:var(--bg);
+  min-height:38px;padding:5px 8px;cursor:pointer;
+  transition:border-color .15s;position:relative;
+}
+.ms-wrap.open{border-color:var(--taupe);}
+.ms-tags{display:flex;flex-wrap:wrap;gap:4px;align-items:center;min-height:26px;}
 .ms-ph{font-size:12px;color:var(--text3);padding:2px 3px;}
 .tag{background:var(--taupe);color:#F5F2ED;font-size:11px;font-weight:500;padding:3px 8px;border-radius:14px;display:inline-flex;align-items:center;gap:4px;}
 .tag-x{opacity:.6;cursor:pointer;font-size:12px;line-height:1;}
 .tag-x:hover{opacity:1;}
-.ms-dropdown{display:none;position:fixed;background:#fff;border:1px solid var(--border2);border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.18);z-index:9999;max-height:240px;overflow-y:auto;}
+
+/* DROPDOWN — position:fixed so it escapes overflow:hidden parents */
+.ms-dropdown{
+  display:none;
+  position:fixed;
+  background:#fff;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  box-shadow:0 8px 32px rgba(0,0,0,.15);
+  z-index:9999;
+  max-height:240px;
+  overflow-y:auto;
+}
 .ms-wrap.open .ms-dropdown{display:block;}
 .ms-opt{padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;}
 .ms-opt:hover{background:var(--bg2);}
 .ms-opt.selected{color:var(--taupe);font-weight:500;}
-.ms-opt .check{width:14px;height:14px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.ms-opt.selected .check{background:var(--taupe);border-color:var(--taupe);color:#fff;font-size:10px;}
-.ms-search{padding:8px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;}
-.ms-search input{border:1px solid var(--border2);border-radius:5px;padding:5px 9px;font-size:12px;width:100%;}
+.ms-check{width:14px;height:14px;border:1px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.ms-opt.selected .ms-check{background:var(--taupe);border-color:var(--taupe);color:#fff;}
+.ms-search-wrap{padding:8px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;}
+.ms-search-wrap input{border:1px solid var(--border2);border-radius:5px;padding:5px 9px;font-size:12px;width:100%;outline:none;}
 
-/* presets */
+/* PRESETS */
 .preset-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
 .pc{position:relative;}
 .pc-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
-.pc-row{display:flex;gap:0;}
+.pc-row{display:flex;}
 .pc-sel{flex:1;border-radius:7px 0 0 7px;border-right:none;}
-.pc-q{width:32px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border2);border-left:none;border-radius:0 7px 7px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--taupe-l);transition:all .15s;}
+.pc-q{
+  width:32px;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--border2);border-left:none;
+  border-radius:0 7px 7px 0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--taupe-l);transition:all .15s;
+}
 .pc-q:hover{background:var(--taupe);color:#fff;}
-.pc-tip{display:none;position:fixed;width:220px;background:var(--taupe-d);color:#F5F2ED;font-size:12px;line-height:1.6;padding:12px 14px;border-radius:9px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.25);}
+/* Tooltip — also position:fixed */
+.pc-tip{
+  display:none;position:fixed;width:220px;
+  background:var(--taupe-d);color:#F5F2ED;
+  font-size:12px;line-height:1.6;padding:12px 14px;
+  border-radius:9px;z-index:9999;
+  box-shadow:0 6px 24px rgba(0,0,0,.25);
+}
 .pc-tip.show{display:block;}
 .pc-tip-name{font-size:11px;font-weight:500;color:#C5A96A;margin-bottom:4px;}
 
-/* output */
+/* OUTPUT BAR */
 .output-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:90;}
 .out-tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--border);}
 .out-tab{font-size:12px;font-weight:500;color:var(--text3);padding:9px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px;}
@@ -86,13 +154,18 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
 .out-pane{display:none;padding:12px 20px 14px;}
 .out-pane.active{display:flex;gap:10px;align-items:flex-start;}
 .out-text{font-family:'DM Mono',monospace;font-size:11px;line-height:1.7;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;white-space:pre-wrap;max-height:130px;overflow-y:auto;flex:1;}
-.out-mini-text{font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.9;color:var(--taupe-d);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;white-space:pre-wrap;flex:1;}
+.out-mini{font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.9;color:var(--taupe-d);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;white-space:pre-wrap;flex:1;}
 .out-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
 
-#scroll-top{position:fixed;bottom:170px;left:20px;width:40px;height:40px;border-radius:50%;background:var(--taupe);color:#F5F2ED;font-size:18px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(74,69,64,.3);z-index:200;transition:all .15s;}
+/* SCROLL TOP */
+#scroll-top{
+  position:fixed;bottom:175px;left:20px;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--taupe);color:#F5F2ED;font-size:18px;border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(74,69,64,.3);z-index:200;transition:all .15s;
+}
 #scroll-top:hover{background:var(--taupe-d);transform:translateY(-2px);}
-
-.mt{margin-top:14px;}
 </style>
 </head>
 <body>
@@ -107,91 +180,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
 
 <div class="container">
 
-  <div class="sec-body">
-    <div class="preset-grid">
-      <div class="pc">
-        <div class="pc-label">💡 Свет</div>
-        <div class="pc-row">
-          <select class="pc-sel" id="p_light" onchange="updateTip('light');updatePrompt()">
-            <option value="">— выберите —</option>
-            <option value="rembrandt">Рембрандт</option>
-            <option value="split">Раздельный свет</option>
-            <option value="butterfly">Бабочка / Paramount</option>
-            <option value="rim">Контровой / Rim</option>
-            <option value="chiaroscuro">Кьяроскуро</option>
-            <option value="golden">Золотой час / Окно</option>
-            <option value="neon">Неоновый дуэт</option>
-            <option value="candle">Только свечи</option>
-            <option value="overcast">Пасмурный плоский</option>
-          </select>
-          <div class="pc-q" onclick="toggleTip(\'light_tip\', this)">?</div>
-        </div>
-        <div class="pc-tip" id="light_tip"><div class="pc-tip-name" id="light_tip_name"></div><div id="light_tip_desc"></div></div>
-      </div>
-      <div class="pc">
-        <div class="pc-label">📷 Камера</div>
-        <div class="pc-row">
-          <select class="pc-sel" id="p_camera" onchange="updateTip('camera');updatePrompt()">
-            <option value="">— выберите —</option>
-            <option value="ricoh">Ricoh GR (стрит)</option>
-            <option value="portra">Kodak Portra 400</option>
-            <option value="ektar">Kodak Ektar 100</option>
-            <option value="fuji">Fujifilm Superia 400</option>
-            <option value="contax">Contax T2 (Zeiss)</option>
-            <option value="leica">Leica M (Summilux)</option>
-            <option value="polaroid">Polaroid 600</option>
-            <option value="disposable">Одноразовая камера</option>
-            <option value="canon">Canon AE-1 (50mm)</option>
-          </select>
-          <div class="pc-q" onclick="toggleTip(\'camera_tip\', this)">?</div>
-        </div>
-        <div class="pc-tip" id="camera_tip"><div class="pc-tip-name" id="camera_tip_name"></div><div id="camera_tip_desc"></div></div>
-      </div>
-      <div class="pc">
-        <div class="pc-label">🎨 Цвет / Грейдинг</div>
-        <div class="pc-row">
-          <select class="pc-sel" id="p_color" onchange="updateTip('color');updatePrompt()">
-            <option value="">— выберите —</option>
-            <option value="teal">Teal & Orange</option>
-            <option value="bleach">Отбеливающий обход</option>
-            <option value="warm">Тёплый аналог</option>
-            <option value="cold">Холодный скандинав</option>
-            <option value="tokyo">Токийский неон</option>
-            <option value="matte">Матовый фейд</option>
-            <option value="moody">Мрачный тёмный</option>
-            <option value="vintage">Выцветший винтаж</option>
-          </select>
-          <div class="pc-q" onclick="toggleTip(\'color_tip\', this)">?</div>
-        </div>
-        <div class="pc-tip" id="color_tip"><div class="pc-tip-name" id="color_tip_name"></div><div id="color_tip_desc"></div></div>
-      </div>
-      <div class="pc">
-        <div class="pc-label">🕰 Эпоха / Референс</div>
-        <div class="pc-row">
-          <select class="pc-sel" id="p_era" onchange="updateTip('era');updatePrompt()">
-            <option value="">— выберите —</option>
-            <option value="hollywood30">1930-е Голливуд</option>
-            <option value="noir40">1940-е Нуар</option>
-            <option value="london60">1960-е Свингующий Лондон</option>
-            <option value="disco70">1970-е Студия 54</option>
-            <option value="super90">1990-е Супермодель</option>
-            <option value="y2k">Y2K (2000–2004)</option>
-            <option value="tumblr">2000-е Тумблер</option>
-            <option value="quiet">Тихая роскошь 2023</option>
-            <option value="soviet">Советский реализм</option>
-            <option value="newwave">Французская новая волна</option>
-            <option value="grunge">Гранж (1993)</option>
-            <option value="wkw">Вонг Кар-Вай</option>
-            <option value="newton">Хельмут Ньютон</option>
-          </select>
-          <div class="pc-q" onclick="toggleTip(\'era_tip\', this)">?</div>
-        </div>
-        <div class="pc-tip" id="era_tip"><div class="pc-tip-name" id="era_tip_name"></div><div id="era_tip_desc"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- 1. ПЕРСОНАЖ -->
 <div class="section">
   <div class="sec-hdr" onclick="toggleSec(this)">
@@ -204,7 +192,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Возраст</div>
         <select id="возраст" onchange="updatePrompt()"><option value="">— выберите —</option><option>18</option><option>20</option><option>23</option><option>25</option><option>28</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option></select></div>
       <div class="field"><div class="fl">Этнотип</div>
-        <select id="этнотип" onchange="updatePrompt()"><option value="">— выберите —</option><option>скандинавская</option><option>западноевропейская</option><option>восточноевропейская / славянская</option><option>средиземноморская</option><option>латиноамериканская</option><option>ближневосточная</option><option>южноазиатская</option><option>восточноазиатская</option><option>юго-восточноазиатская</option><option>африканская</option><option>смешанная</option></select></div>
+        <select id="этнотип" onchange="updatePrompt()"><option value="">— выберите —</option><option>скандинавская</option><option>западноевропейская</option><option>восточноевропейская / славянская</option><option>средиземноморская</option><option>латиноамериканская</option><option>ближневосточная</option><option>южноазиатская</option><option>восточноазиатская</option><option>африканская</option><option>смешанная</option></select></div>
     </div>
     <div class="fg3 mt">
       <div class="field"><div class="fl">Телосложение</div>
@@ -227,12 +215,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Форма лица</div>
         <div class="ms-wrap" id="ms_форма_лица" onclick="msClick(event,'форма_лица')">
           <div class="ms-tags" id="tags_форма_лица"><span class="ms-ph">Выберите форму лица</span></div>
-          <div class="ms-dropdown" id="dd_форма_лица"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_форма_лица"></div></div></div>
       <div class="field"><div class="fl">Скулы</div>
         <select id="скулы" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкие</option><option>выраженные</option><option>высокие</option><option>скульптурные</option><option>деликатные</option><option>широкие</option></select></div>
       <div class="field"><div class="fl">Челюсть</div>
-        <select id="челюсть" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкая</option><option>чёткая</option><option>узкая</option><option>широкая</option><option>сильная</option><option>деликатная</option></select></div>
+        <select id="челюсть" onchange="updatePrompt()"><option value="">— выберите —</option><option>мягкая</option><option>чёткая</option><option>узкая</option><option>широкая</option><option>сильная</option></select></div>
       <div class="field"><div class="fl">Подбородок</div>
         <select id="подбородок" onchange="updatePrompt()"><option value="">— выберите —</option><option>аккуратный</option><option>сужающийся</option><option>выраженный</option><option>мягкий</option><option>V-образный</option></select></div>
     </div>
@@ -272,23 +259,19 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Цвет глаз</div>
         <div class="ms-wrap" id="ms_цвет_глаз" onclick="msClick(event,'цвет_глаз')">
           <div class="ms-tags" id="tags_цвет_глаз"><span class="ms-ph">Выберите цвет глаз</span></div>
-          <div class="ms-dropdown" id="dd_цвет_глаз"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_цвет_глаз"></div></div></div>
       <div class="field"><div class="fl">Форма глаз</div>
         <div class="ms-wrap" id="ms_форма_глаз" onclick="msClick(event,'форма_глаз')">
           <div class="ms-tags" id="tags_форма_глаз"><span class="ms-ph">Выберите форму глаз</span></div>
-          <div class="ms-dropdown" id="dd_форма_глаз"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_форма_глаз"></div></div></div>
       <div class="field"><div class="fl">Взгляд</div>
         <div class="ms-wrap" id="ms_взгляд" onclick="msClick(event,'взгляд')">
           <div class="ms-tags" id="tags_взгляд"><span class="ms-ph">Выберите взгляд</span></div>
-          <div class="ms-dropdown" id="dd_взгляд"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_взгляд"></div></div></div>
       <div class="field"><div class="fl">Фокус взгляда</div>
         <div class="ms-wrap" id="ms_фокус" onclick="msClick(event,'фокус')">
           <div class="ms-tags" id="tags_фокус"><span class="ms-ph">Выберите фокус</span></div>
-          <div class="ms-dropdown" id="dd_фокус"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_фокус"></div></div></div>
     </div>
   </div>
 </div>
@@ -320,18 +303,15 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Эмоция</div>
         <div class="ms-wrap" id="ms_эмоция" onclick="msClick(event,'эмоция')">
           <div class="ms-tags" id="tags_эмоция"><span class="ms-ph">Выберите эмоцию</span></div>
-          <div class="ms-dropdown" id="dd_эмоция"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_эмоция"></div></div></div>
       <div class="field"><div class="fl">Микроэмоция</div>
         <div class="ms-wrap" id="ms_микроэмоция" onclick="msClick(event,'микроэмоция')">
           <div class="ms-tags" id="tags_микроэмоция"><span class="ms-ph">Выберите микроэмоцию</span></div>
-          <div class="ms-dropdown" id="dd_микроэмоция"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_микроэмоция"></div></div></div>
       <div class="field"><div class="fl">Улыбка</div>
         <div class="ms-wrap" id="ms_улыбка" onclick="msClick(event,'улыбка')">
           <div class="ms-tags" id="tags_улыбка"><span class="ms-ph">Выберите улыбку</span></div>
-          <div class="ms-dropdown" id="dd_улыбка"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_улыбка"></div></div></div>
     </div>
   </div>
 </div>
@@ -346,23 +326,19 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Положение головы</div>
         <div class="ms-wrap" id="ms_поворот_головы" onclick="msClick(event,'поворот_головы')">
           <div class="ms-tags" id="tags_поворот_головы"><span class="ms-ph">Выберите положение</span></div>
-          <div class="ms-dropdown" id="dd_поворот_головы"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_поворот_головы"></div></div></div>
       <div class="field"><div class="fl">Движение головы</div>
         <div class="ms-wrap" id="ms_движение_головы" onclick="msClick(event,'движение_головы')">
           <div class="ms-tags" id="tags_движение_головы"><span class="ms-ph">Выберите движение</span></div>
-          <div class="ms-dropdown" id="dd_движение_головы"></div>
-        </div></div>
-      <div class="field"><div class="fl">Мимика и микродвижения</div>
+          <div class="ms-dropdown" id="dd_движение_головы"></div></div></div>
+      <div class="field"><div class="fl">Мимика</div>
         <div class="ms-wrap" id="ms_мимика" onclick="msClick(event,'мимика')">
           <div class="ms-tags" id="tags_мимика"><span class="ms-ph">Выберите мимику</span></div>
-          <div class="ms-dropdown" id="dd_мимика"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_мимика"></div></div></div>
       <div class="field"><div class="fl">Шея и осанка</div>
         <div class="ms-wrap" id="ms_шея" onclick="msClick(event,'шея')">
           <div class="ms-tags" id="tags_шея"><span class="ms-ph">Выберите осанку</span></div>
-          <div class="ms-dropdown" id="dd_шея"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_шея"></div></div></div>
     </div>
   </div>
 </div>
@@ -377,38 +353,31 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Цвет волос</div>
         <div class="ms-wrap" id="ms_цвет_волос" onclick="msClick(event,'цвет_волос')">
           <div class="ms-tags" id="tags_цвет_волос"><span class="ms-ph">Выберите цвет волос</span></div>
-          <div class="ms-dropdown" id="dd_цвет_волос"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_цвет_волос"></div></div></div>
       <div class="field"><div class="fl">Длина волос</div>
         <div class="ms-wrap" id="ms_длина_волос" onclick="msClick(event,'длина_волос')">
           <div class="ms-tags" id="tags_длина_волос"><span class="ms-ph">Выберите длину</span></div>
-          <div class="ms-dropdown" id="dd_длина_волос"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_длина_волос"></div></div></div>
       <div class="field"><div class="fl">Текстура волос</div>
         <div class="ms-wrap" id="ms_текстура_волос" onclick="msClick(event,'текстура_волос')">
           <div class="ms-tags" id="tags_текстура_волос"><span class="ms-ph">Выберите текстуру</span></div>
-          <div class="ms-dropdown" id="dd_текстура_волос"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_текстура_волос"></div></div></div>
       <div class="field"><div class="fl">Укладка</div>
         <div class="ms-wrap" id="ms_укладка" onclick="msClick(event,'укладка')">
           <div class="ms-tags" id="tags_укладка"><span class="ms-ph">Выберите укладку</span></div>
-          <div class="ms-dropdown" id="dd_укладка"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_укладка"></div></div></div>
       <div class="field"><div class="fl">Пробор</div>
         <div class="ms-wrap" id="ms_пробор" onclick="msClick(event,'пробор')">
           <div class="ms-tags" id="tags_пробор"><span class="ms-ph">Выберите пробор</span></div>
-          <div class="ms-dropdown" id="dd_пробор"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_пробор"></div></div></div>
       <div class="field"><div class="fl">Женские стрижки</div>
         <div class="ms-wrap" id="ms_женские_стрижки" onclick="msClick(event,'женские_стрижки')">
           <div class="ms-tags" id="tags_женские_стрижки"><span class="ms-ph">Выберите стрижку</span></div>
-          <div class="ms-dropdown" id="dd_женские_стрижки"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_женские_стрижки"></div></div></div>
       <div class="field"><div class="fl">Мужские стрижки</div>
         <div class="ms-wrap" id="ms_мужские_стрижки" onclick="msClick(event,'мужские_стрижки')">
           <div class="ms-tags" id="tags_мужские_стрижки"><span class="ms-ph">Выберите стрижку</span></div>
-          <div class="ms-dropdown" id="dd_мужские_стрижки"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_мужские_стрижки"></div></div></div>
       <div class="field"><div class="fl">Макияж (жен.)</div>
         <select id="макияж" onchange="updatePrompt()"><option value="">— выберите —</option><option>без макияжа</option><option>натуральный минимальный</option><option>лёгкий естественный</option><option>дневной ухоженный</option><option>вечерний / гламурный</option><option>акцент на глаза</option><option>акцент на губы</option></select></div>
       <div class="field"><div class="fl">Растительность (муж.)</div>
@@ -427,33 +396,27 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Тип кадра</div>
         <div class="ms-wrap" id="ms_кадр" onclick="msClick(event,'кадр')">
           <div class="ms-tags" id="tags_кадр"><span class="ms-ph">Выберите кадр</span></div>
-          <div class="ms-dropdown" id="dd_кадр"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_кадр"></div></div></div>
       <div class="field"><div class="fl">Объектив</div>
         <div class="ms-wrap" id="ms_объектив" onclick="msClick(event,'объектив')">
           <div class="ms-tags" id="tags_объектив"><span class="ms-ph">Выберите объектив</span></div>
-          <div class="ms-dropdown" id="dd_объектив"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_объектив"></div></div></div>
       <div class="field"><div class="fl">Диафрагма</div>
         <div class="ms-wrap" id="ms_диафрагма" onclick="msClick(event,'диафрагма')">
           <div class="ms-tags" id="tags_диафрагма"><span class="ms-ph">Выберите диафрагму</span></div>
-          <div class="ms-dropdown" id="dd_диафрагма"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_диафрагма"></div></div></div>
       <div class="field"><div class="fl">Выдержка</div>
         <div class="ms-wrap" id="ms_выдержка" onclick="msClick(event,'выдержка')">
           <div class="ms-tags" id="tags_выдержка"><span class="ms-ph">Выберите выдержку</span></div>
-          <div class="ms-dropdown" id="dd_выдержка"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_выдержка"></div></div></div>
       <div class="field"><div class="fl">ISO</div>
         <div class="ms-wrap" id="ms_iso" onclick="msClick(event,'iso')">
           <div class="ms-tags" id="tags_iso"><span class="ms-ph">Выберите ISO</span></div>
-          <div class="ms-dropdown" id="dd_iso"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_iso"></div></div></div>
       <div class="field"><div class="fl">Физика изображения</div>
         <div class="ms-wrap" id="ms_физика" onclick="msClick(event,'физика')">
           <div class="ms-tags" id="tags_физика"><span class="ms-ph">Выберите физику</span></div>
-          <div class="ms-dropdown" id="dd_физика"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_физика"></div></div></div>
     </div>
     <div class="fg2 mt">
       <div class="field"><div class="fl">Боке</div>
@@ -474,21 +437,18 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Тип сцены</div>
         <div class="ms-wrap" id="ms_сцена" onclick="msClick(event,'сцена')">
           <div class="ms-tags" id="tags_сцена"><span class="ms-ph">Выберите сцену</span></div>
-          <div class="ms-dropdown" id="dd_сцена"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_сцена"></div></div></div>
       <div class="field"><div class="fl">Характер фона</div>
         <div class="ms-wrap" id="ms_фон" onclick="msClick(event,'фон')">
           <div class="ms-tags" id="tags_фон"><span class="ms-ph">Выберите фон</span></div>
-          <div class="ms-dropdown" id="dd_фон"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_фон"></div></div></div>
       <div class="field"><div class="fl">Погода и атмосфера</div>
         <div class="ms-wrap" id="ms_погода" onclick="msClick(event,'погода')">
           <div class="ms-tags" id="tags_погода"><span class="ms-ph">Выберите погоду</span></div>
-          <div class="ms-dropdown" id="dd_погода"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_погода"></div></div></div>
     </div>
     <div class="field mt"><div class="fl">Локация (свободный ввод)</div>
-      <textarea id="локация" placeholder="Опиши любую сцену, место, контекст..." onchange="updatePrompt()" oninput="updatePrompt()"></textarea></div>
+      <textarea id="локация" placeholder="Опиши любую сцену, место, контекст..." oninput="updatePrompt()"></textarea></div>
   </div>
 </div>
 
@@ -501,8 +461,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
     <div class="field"><div class="fl">Композиция кадра</div>
       <div class="ms-wrap" id="ms_композиция" onclick="msClick(event,'композиция')">
         <div class="ms-tags" id="tags_композиция"><span class="ms-ph">Выберите композицию</span></div>
-        <div class="ms-dropdown" id="dd_композиция"></div>
-      </div></div>
+        <div class="ms-dropdown" id="dd_композиция"></div></div></div>
   </div>
 </div>
 
@@ -516,13 +475,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
       <div class="field"><div class="fl">Одежда</div>
         <div class="ms-wrap" id="ms_одежда" onclick="msClick(event,'одежда')">
           <div class="ms-tags" id="tags_одежда"><span class="ms-ph">Выберите одежду</span></div>
-          <div class="ms-dropdown" id="dd_одежда"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_одежда"></div></div></div>
       <div class="field"><div class="fl">Аксессуары</div>
         <div class="ms-wrap" id="ms_аксессуары" onclick="msClick(event,'аксессуары')">
           <div class="ms-tags" id="tags_аксессуары"><span class="ms-ph">Выберите аксессуары</span></div>
-          <div class="ms-dropdown" id="dd_аксессуары"></div>
-        </div></div>
+          <div class="ms-dropdown" id="dd_аксессуары"></div></div></div>
       <div class="field"><div class="fl">Стиль фотографии</div>
         <select id="стиль" onchange="updatePrompt()"><option value="">— выберите —</option><option>коммерческий стоковый</option><option>editorial / журнальный</option><option>beauty-съёмка</option><option>lifestyle</option><option>корпоративный портрет</option><option>уличная мода</option><option>iPhone фото</option></select></div>
       <div class="field"><div class="fl">Цель</div>
@@ -531,7 +488,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
         <select id="качество" onchange="updatePrompt()"><option value="">— выберите —</option><option>ультрареализм</option><option>DSLR</option><option>8K</option></select></div>
     </div>
     <div class="field mt"><div class="fl">Одежда (свободный ввод)</div>
-      <textarea id="одежда_текст" placeholder="Опишите любую одежду свободно..." onchange="updatePrompt()" oninput="updatePrompt()"></textarea></div>
+      <textarea id="одежда_текст" placeholder="Опишите любую одежду свободно..." oninput="updatePrompt()"></textarea></div>
   </div>
 </div>
 
@@ -541,16 +498,81 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
     <div class="sec-num">13</div><div class="sec-title">Негативный промпт</div><div class="sec-arrow">▾</div>
   </div>
   <div class="sec-body">
-    <textarea id="негатив" oninput="updatePrompt()" style="min-height:60px;">plastic skin, CGI, 3D render, doll face, mannequin, perfect symmetry, beauty filter, over-smoothing, waxy skin, cartoon, anime, artificial eyes, unnatural proportions, generation artifacts, airbrushed, fake</textarea>
+    <textarea id="негатив" oninput="updatePrompt()">plastic skin, CGI, 3D render, doll face, mannequin, perfect symmetry, beauty filter, over-smoothing, waxy skin, cartoon, anime, artificial eyes, unnatural proportions, generation artifacts, airbrushed, fake</textarea>
   </div>
 </div>
 
-<!-- PRESETS -->
+<!-- 14. ПРЕСЕТЫ — последний блок -->
 <div class="section">
   <div class="sec-hdr" onclick="toggleSec(this)">
-    <div class="sec-title">🎛 Пресеты</div>
-    <div class="sec-arrow">▾</div>
+    <div class="sec-title">🎛 Пресеты</div><div class="sec-arrow">▾</div>
   </div>
+  <div class="sec-body">
+    <div class="preset-grid">
+      <div class="pc">
+        <div class="pc-label">💡 Свет</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_light" onchange="updateTip('light');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="rembrandt">Рембрандт</option><option value="split">Раздельный свет</option>
+            <option value="butterfly">Бабочка / Paramount</option><option value="rim">Контровой / Rim</option>
+            <option value="chiaroscuro">Кьяроскуро</option><option value="golden">Золотой час / Окно</option>
+            <option value="neon">Неоновый дуэт</option><option value="candle">Только свечи</option>
+            <option value="overcast">Пасмурный плоский</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip('light_tip',this)">?</div>
+        </div>
+        <div class="pc-tip" id="light_tip"><div class="pc-tip-name" id="light_tip_name"></div><div id="light_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">📷 Камера</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_camera" onchange="updateTip('camera');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="ricoh">Ricoh GR (стрит)</option><option value="portra">Kodak Portra 400</option>
+            <option value="ektar">Kodak Ektar 100</option><option value="fuji">Fujifilm Superia 400</option>
+            <option value="contax">Contax T2 (Zeiss)</option><option value="leica">Leica M (Summilux)</option>
+            <option value="polaroid">Polaroid 600</option><option value="disposable">Одноразовая камера</option>
+            <option value="canon">Canon AE-1 (50mm)</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip('camera_tip',this)">?</div>
+        </div>
+        <div class="pc-tip" id="camera_tip"><div class="pc-tip-name" id="camera_tip_name"></div><div id="camera_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">🎨 Цвет / Грейдинг</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_color" onchange="updateTip('color');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="teal">Teal & Orange</option><option value="bleach">Отбеливающий обход</option>
+            <option value="warm">Тёплый аналог</option><option value="cold">Холодный скандинав</option>
+            <option value="tokyo">Токийский неон</option><option value="matte">Матовый фейд</option>
+            <option value="moody">Мрачный тёмный</option><option value="vintage">Выцветший винтаж</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip('color_tip',this)">?</div>
+        </div>
+        <div class="pc-tip" id="color_tip"><div class="pc-tip-name" id="color_tip_name"></div><div id="color_tip_desc"></div></div>
+      </div>
+      <div class="pc">
+        <div class="pc-label">🕰 Эпоха / Референс</div>
+        <div class="pc-row">
+          <select class="pc-sel" id="p_era" onchange="updateTip('era');updatePrompt()">
+            <option value="">— выберите —</option>
+            <option value="hollywood30">1930-е Голливуд</option><option value="noir40">1940-е Нуар</option>
+            <option value="london60">1960-е Свингующий Лондон</option><option value="disco70">1970-е Студия 54</option>
+            <option value="super90">1990-е Супермодель</option><option value="y2k">Y2K (2000–2004)</option>
+            <option value="tumblr">2000-е Тумблер</option><option value="quiet">Тихая роскошь 2023</option>
+            <option value="soviet">Советский реализм</option><option value="newwave">Французская новая волна</option>
+            <option value="grunge">Гранж (1993)</option><option value="wkw">Вонг Кар-Вай</option>
+            <option value="newton">Хельмут Ньютон</option>
+          </select>
+          <div class="pc-q" onclick="toggleTip('era_tip',this)">?</div>
+        </div>
+        <div class="pc-tip" id="era_tip"><div class="pc-tip-name" id="era_tip_name"></div><div id="era_tip_desc"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div><!-- /container -->
 
@@ -568,7 +590,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
     </div>
   </div>
   <div class="out-pane" id="op_mini">
-    <div class="out-mini-text" id="out_mini">—</div>
+    <div class="out-mini" id="out_mini">—</div>
     <div class="out-actions">
       <button class="btn btn-p" onclick="copyText('out_mini')">Копировать</button>
     </div>
@@ -578,6 +600,20 @@ textarea{resize:vertical;min-height:70px;line-height:1.6;}
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+function toggleTip(id, btnEl) {
+  const el = document.getElementById(id);
+  const wasShown = el.classList.contains('show');
+  document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
+  if (!wasShown && el.querySelector('.pc-tip-name').textContent) {
+    const rect = btnEl.closest('.pc-row').getBoundingClientRect();
+    el.style.top = (rect.bottom + 6) + 'px';
+    const left = rect.left;
+    el.style.left = Math.min(left, window.innerWidth - 236) + 'px';
+    el.classList.add('show');
+  }
+}
+
+
 // ── MULTISELECT DATA ──
 const MS_DATA = {
   форма_лица:['овальное лицо','вытянутое овальное','круглое лицо','сердцевидное лицо','квадратное лицо','прямоугольное лицо','ромбовидное лицо','скульптурное лицо','лицо с выраженными скулами','лицо с чёткой линией челюсти','гармоничные пропорции лица','V-образная форма лица','компактное лицо'],
@@ -649,7 +685,6 @@ function msClick(e, key) {
   closeAllMs();
   if (!isOpen) {
     wrap.classList.add('open');
-    // Position dropdown via fixed coords to escape overflow:hidden parents
     const dd = document.getElementById('dd_' + key);
     if (dd) {
       const rect = wrap.getBoundingClientRect();
@@ -658,7 +693,7 @@ function msClick(e, key) {
       dd.style.width = rect.width + 'px';
     }
     const si = document.getElementById('ms_search_' + key);
-    if (si) si.focus();
+    if (si) setTimeout(() => si.focus(), 10);
   }
 }
 
@@ -718,9 +753,9 @@ function removeTag(key, val) {
 function toggleSec(hdr) {
   const body = hdr.nextElementSibling;
   const arrow = hdr.querySelector('.sec-arrow');
+  if (!body) return;
   const isOpen = body.classList.toggle('open');
-  arrow.classList.toggle('open', isOpen);
-  hdr.classList.toggle('closed', !isOpen);
+  if (arrow) arrow.classList.toggle('open', isOpen);
 }
 
 
@@ -748,21 +783,7 @@ function updateTip(cat) {
   }
 }
 
-function toggleTip(id, btnEl) {
-  const el = document.getElementById(id);
-  const wasShown = el.classList.contains('show');
-  document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
-  if (!wasShown && el.querySelector('.pc-tip-name').textContent) {
-    // Position via fixed coords
-    const rect = btnEl.closest('.pc-row').getBoundingClientRect();
-    el.style.top = (rect.bottom + 6) + 'px';
-    // Keep within viewport
-    const left = rect.left;
-    const tipW = 220;
-    el.style.left = Math.min(left, window.innerWidth - tipW - 16) + 'px';
-    el.classList.add('show');
-  }
-}
+
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.pc')) document.querySelectorAll('.pc-tip.show').forEach(t => t.classList.remove('show'));
 });
@@ -1071,11 +1092,7 @@ function generateRandom() {
 // ── INIT ──
 buildDropdowns();
 updatePrompt();
-// Mark all closed headers
-document.querySelectorAll('.sec-hdr').forEach(hdr => {
-  const body = hdr.nextElementSibling;
-  if (body && !body.classList.contains('open')) hdr.classList.add('closed');
-});
+
 // Reposition open dropdowns on scroll
 window.addEventListener('scroll', () => {
   document.querySelectorAll('.ms-wrap.open').forEach(wrap => {
@@ -1088,6 +1105,7 @@ window.addEventListener('scroll', () => {
     }
   });
 }, true);
+
 </script>
 </body>
 </html>
